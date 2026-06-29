@@ -25,7 +25,7 @@ class CitizenAdvisoryOutput(BaseModel):
     advisory_level: str
     panic_level: str
     english_advisory: str
-    tamil_advisory: str
+    hindi_advisory: str
     who_should_take_care: list[str]
     recommended_precautions: list[str]
     what_not_to_claim: list[str]
@@ -42,10 +42,8 @@ class CitizenAdvisoryOutput(BaseModel):
     def coerce_string_to_list(cls, value):
         if isinstance(value, list):
             return value
-
         if isinstance(value, str):
             return [value]
-
         return value
 
 
@@ -54,15 +52,14 @@ class GroqCitizenAdvisoryAgent:
     Groq-powered citizen advisory agent.
 
     LLM-first design:
-    - Groq generates English + Tamil advisory.
-    - Deterministic safety repair layer checks for weak/unsafe output.
+    - Groq generates English + Hindi advisory.
+    - Deterministic safety repair layer checks weak/unsafe output.
     - Fallbacks are used only when needed.
     """
 
     def __init__(self, model: Optional[str] = None) -> None:
         self.client = get_groq_client()
         self.model = model or get_groq_model()
-        
 
     def _load_json(self, path: Path) -> Dict[str, Any]:
         if not path.exists():
@@ -121,27 +118,78 @@ class GroqCitizenAdvisoryAgent:
             "should stay aware and reduce exposure near dusty or high-traffic roads if they feel discomfort."
         )
 
-    def _fallback_tamil_advisory(self) -> str:
+    def _fallback_hindi_advisory(self) -> str:
         return (
-            "தற்போதைய காற்றுத் தரம் திருப்திகரமாக உள்ளது. "
-            "பயப்பட தேவையில்லை. ஆனால் காற்று பரவல் நிலை நடுத்தரமாக இருப்பதால், "
-            "ஆஸ்துமா, இதய நோய், மூச்சுத் திணறல் உள்ளவர்கள், குழந்தைகள், முதியவர்கள் "
-            "மற்றும் வெளியில் வேலை செய்பவர்கள் தூசி அதிகமாக இருக்கும் சாலைகள் அல்லது "
-            "அதிக போக்குவரத்து உள்ள பகுதிகளில் சிரமம் இருந்தால் தேவையற்ற வெளிப்புற "
-            "செயல்பாடுகளை குறைக்கலாம்."
+            "चेन्नई स्टेशन क्षेत्र के आसपास वर्तमान वायु गुणवत्ता संतोषजनक है। "
+            "घबराने की जरूरत नहीं है। लेकिन फैलाव की स्थिति मध्यम है, इसलिए अस्थमा, "
+            "हृदय रोग या सांस की समस्या वाले लोग, बच्चे, बुजुर्ग और बाहर काम करने वाले लोग "
+            "यदि असुविधा महसूस करें तो धूल भरी या अधिक ट्रैफिक वाली सड़कों के पास "
+            "अनावश्यक बाहरी गतिविधियों को कम करें।"
         )
 
-    def _looks_like_bad_tamil(self, text: str) -> bool:
+    def _fix_spacing_artifacts(self, text: str) -> str:
+        if not isinstance(text, str):
+            return text
+
+        replacements = {
+            "issatisfactory": "is satisfactory",
+            "neardusty": "near dusty",
+            "nearhigh": "near high",
+            "high-trafficroads": "high-traffic roads",
+            "operationalforecast": "operational forecast",
+            "officialCPCB": "official CPCB",
+            "officialAQI": "official AQI",
+            "ground-levelAQI": "ground-level AQI",
+            "airquality": "air quality",
+            "mediumpriority": "medium priority",
+            "hightraffic": "high traffic",
+            "PM10-heavysignal": "PM10-heavy signal",
+            "road densityis": "road density is",
+            "snapshotincludes": "snapshot includes",
+            "supportsregional": "supports regional",
+            "canaffect": "can affect",
+            "isconfirmed": "is confirmed",
+            "currentAQI": "current AQI",
+            "meanbaseline": "mean baseline",
+            "thecurrent": "the current",
+        }
+
+        for bad, good in replacements.items():
+            text = text.replace(bad, good)
+
+        return " ".join(text.split())
+
+    def _looks_like_bad_hindi(self, text: str) -> bool:
         if not text or len(text.strip()) < 40:
             return True
 
-        repeated_bad_patterns = [
-            "கழு கழு",
-            "அல்கழி",
-            "எத்கழி",
+        meaningful_words = [
+            "वायु",
+            "गुणवत्ता",
+            "संतोषजनक",
+            "घबराने",
+            "अस्थमा",
+            "हृदय",
+            "सांस",
+            "बच्चे",
+            "बुजुर्ग",
+            "ट्रैफिक",
+            "धूल",
         ]
 
-        return any(pattern in text for pattern in repeated_bad_patterns)
+        meaningful_hits = sum(word in text for word in meaningful_words)
+
+        if meaningful_hits < 4:
+            return True
+
+        bad_patterns = [
+            "asdf",
+            "lorem",
+            "random",
+            "अनुवाद अनुवाद",
+        ]
+
+        return any(pattern in text.lower() for pattern in bad_patterns)
 
     def _contains_unsafe_claim(self, text: str) -> bool:
         lower = text.lower()
@@ -158,14 +206,48 @@ class GroqCitizenAdvisoryAgent:
 
         return any(phrase in lower for phrase in unsafe_phrases)
 
+    def _repair_precautions_if_needed(self, precautions: list[str]) -> list[str]:
+        repaired = []
+
+        for item in precautions:
+            fixed = self._fix_spacing_artifacts(item)
+
+            if "avoid heavy exertion outdoors" in fixed.lower():
+                fixed = "Reduce strenuous outdoor activity only if you feel discomfort."
+
+            repaired.append(fixed)
+
+        return repaired
+
     def _repair_advisory_if_needed(
         self,
         advisory_payload: Dict[str, Any],
     ) -> Dict[str, Any]:
         repairs_applied = []
 
+        advisory_payload["english_advisory"] = self._fix_spacing_artifacts(
+            advisory_payload.get("english_advisory", "")
+        )
+        advisory_payload["hindi_advisory"] = self._fix_spacing_artifacts(
+            advisory_payload.get("hindi_advisory", "")
+        )
+
+        advisory_payload["what_not_to_claim"] = [
+            self._fix_spacing_artifacts(item)
+            for item in advisory_payload.get("what_not_to_claim", [])
+        ]
+
+        advisory_payload["data_limitations"] = [
+            self._fix_spacing_artifacts(item)
+            for item in advisory_payload.get("data_limitations", [])
+        ]
+
+        advisory_payload["recommended_precautions"] = self._repair_precautions_if_needed(
+            advisory_payload.get("recommended_precautions", [])
+        )
+
         english = advisory_payload.get("english_advisory", "")
-        tamil = advisory_payload.get("tamil_advisory", "")
+        hindi = advisory_payload.get("hindi_advisory", "")
 
         advisory_level = advisory_payload.get("advisory_level", "low")
         panic_level = advisory_payload.get("panic_level", "none")
@@ -175,9 +257,9 @@ class GroqCitizenAdvisoryAgent:
                 advisory_payload["english_advisory"] = self._fallback_english_advisory()
                 repairs_applied.append("english_advisory_repaired")
 
-            if self._looks_like_bad_tamil(tamil) or self._contains_unsafe_claim(tamil):
-                advisory_payload["tamil_advisory"] = self._fallback_tamil_advisory()
-                repairs_applied.append("tamil_advisory_repaired")
+            if self._looks_like_bad_hindi(hindi) or self._contains_unsafe_claim(hindi):
+                advisory_payload["hindi_advisory"] = self._fallback_hindi_advisory()
+                repairs_applied.append("hindi_advisory_repaired")
 
             if len(advisory_payload.get("who_should_take_care", [])) <= 2:
                 advisory_payload["who_should_take_care"] = [
@@ -223,7 +305,7 @@ Rules:
 - Do not claim confirmed source attribution.
 - Do not mention enforcement details to citizens.
 - If AQI is satisfactory, do not advise extreme precautions.
-- Tamil advisory must be natural, simple, and meaningful.
+- Hindi advisory must be natural, simple, and meaningful.
 - Fields that require arrays must be JSON arrays, not strings.
 
 Required JSON:
@@ -231,7 +313,7 @@ Required JSON:
   "advisory_level": "low" | "moderate" | "high",
   "panic_level": "none" | "low" | "moderate",
   "english_advisory": "short useful string",
-  "tamil_advisory": "natural Tamil advisory string",
+  "hindi_advisory": "natural Hindi advisory string",
   "who_should_take_care": ["short string"],
   "recommended_precautions": ["short string"],
   "what_not_to_claim": ["short string"],
@@ -245,7 +327,7 @@ Verified context:
 
 Create a concise citizen advisory for people near the Chennai station area.
 
-Tamil meaning to preserve:
+Hindi meaning to preserve:
 "The current air quality is satisfactory. There is no need to panic. People with asthma, heart disease, children, elderly people, and outdoor workers should stay aware and reduce exposure near dusty or high-traffic roads if they feel discomfort."
 
 Return only JSON.
@@ -286,7 +368,7 @@ Return only JSON.
             "model": self.model,
             "input_summary": {
                 "source": "Groq Supervisor Agent output + real station snapshot",
-                "mode": "LLM-generated advisory with deterministic safety repair layer",
+                "mode": "LLM-generated English/Hindi advisory with deterministic safety repair layer",
             },
             "advisory": advisory_payload,
         }
