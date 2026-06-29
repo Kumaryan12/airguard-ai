@@ -1,9 +1,13 @@
 import json
 from datetime import datetime
-from pathlib import Path
 from typing import Any, Dict
 
 from ml.config import PROJECT_ROOT
+
+
+DATA_DIR = PROJECT_ROOT / "backend" / "data" / "sample"
+OUTPUT_PATH = DATA_DIR / "airguard_demo_output.json"
+
 
 def clean_text(value):
     if isinstance(value, str):
@@ -22,16 +26,40 @@ def clean_text(value):
             "operationalforecast": "operational forecast",
             "neardusty": "near dusty",
             "nearhigh-traffic": "near high-traffic",
+            "high-trafficroads": "high-traffic roads",
             "signaland": "signal and",
             "roaddensity": "road density",
+            "road densityis": "road density is",
             "asa pollution": "as a pollution",
             "asSatisfactory": "as Satisfactory",
             "columnmeasurement": "column measurement",
             "canaffect": "can affect",
-            "source": "source.",
             "fromavailable": "from available",
             "not official CPCBbreakpoint": "not official CPCB breakpoint",
-            "not direct ground-level AQI": "not direct ground-level AQI",
+            "officialAQI": "official AQI",
+            "officialCPCB": "official CPCB",
+            "ground-levelAQI": "ground-level AQI",
+            "supportsregional": "supports regional",
+            "snapshotincludes": "snapshot includes",
+            "isconfirmed": "is confirmed",
+            "PM10-heavysignal": "PM10-heavy signal",
+            "operationallydeployable": "operationally deployable",
+            "Major roaddensity": "Major road density",
+            "Clouds,retrieval": "Clouds, retrieval",
+            "sourcehypothesis": "source hypothesis",
+            "moderaterelative": "moderate relative",
+            "Medium-Priority Preventive Actions Recommended": (
+                "Medium-Priority Preventive Actions Recommended"
+            ),
+            "Industrial influence as confirmed pollution source.": (
+                "Do not claim industrial influence is a confirmed pollution source."
+            ),
+            "Industrial influence as confirmed pollution source": (
+                "Do not claim industrial influence is a confirmed pollution source."
+            ),
+            "Learned ML model as best operational forecast method": (
+                "Do not claim the learned ML model is the best operational forecast method."
+            ),
         }
 
         for bad, good in replacements.items():
@@ -48,12 +76,6 @@ def clean_text(value):
     return value
 
 
-DATA_DIR = PROJECT_ROOT / "backend" / "data" / "sample"
-OUTPUT_PATH = DATA_DIR / "airguard_demo_output.json"
-
-
-
-
 def load_json(name: str) -> Dict[str, Any]:
     path = DATA_DIR / name
 
@@ -64,6 +86,11 @@ def load_json(name: str) -> Dict[str, Any]:
         return json.load(f)
 
 
+def first_station(payload: Dict[str, Any]) -> Dict[str, Any]:
+    stations = payload.get("stations", [])
+    return stations[0] if stations else {}
+
+
 def main() -> None:
     snapshot = load_json("real_geospatial_snapshot.json")
     forecast_benchmark = load_json("real_forecast_benchmark_metrics.json")
@@ -71,12 +98,16 @@ def main() -> None:
     supervisor = load_json("groq_supervisor_agent_output.json")
     citizen = load_json("citizen_advisory_agent_output.json")
     cpcb_aqi = load_json("cpcb_aqi_output.json")
+    wind_sector = load_json("wind_sector_evidence.json")
 
-    station = snapshot["stations"][0] if snapshot.get("stations") else {}
+    station = first_station(snapshot)
     decision = supervisor.get("decision", {})
     advisory = citizen.get("advisory", {})
-    cpcb_station = cpcb_aqi["stations"][0] if cpcb_aqi.get("stations") else {}
+
+    cpcb_station = first_station(cpcb_aqi)
     cpcb_result = cpcb_station.get("cpcb_aqi", {})
+
+    wind_station = first_station(wind_sector)
 
     payload = {
         "project": "AirGuard AI",
@@ -89,17 +120,21 @@ def main() -> None:
             "monitoring_priority": decision.get("monitoring_priority"),
             "intervention_required_now": decision.get("intervention_required_now"),
             "current_estimated_aqi": station.get("aqi_estimate", {}).get("estimated_aqi"),
-            "current_estimated_aqi_category": station.get("aqi_estimate", {}).get("estimated_aqi_category"),
+            "current_estimated_aqi_category": station.get("aqi_estimate", {}).get(
+                "estimated_aqi_category"
+            ),
+            "cpcb_aqi": cpcb_result.get("aqi"),
+            "cpcb_aqi_category": cpcb_result.get("category"),
+            "dominant_pollutant": cpcb_result.get("dominant_pollutant"),
             "data_status": station.get("data_status"),
             "sensor_age_hours": station.get("max_age_hours"),
             "selected_forecast_method": decision.get("selected_forecast_method"),
             "remote_sensing_signal": remote_sensing.get("relative_no2_signal"),
             "sentinel5p_image_count": remote_sensing.get("collection_image_count"),
+            "wind_from_sector": wind_station.get("interpreted_wind_from_sector"),
+            "wind_speed_class": wind_station.get("wind_speed_class"),
             "citizen_advisory_level": advisory.get("advisory_level"),
             "panic_level": advisory.get("panic_level"),
-            "cpcb_aqi": cpcb_result.get("aqi"),
-            "cpcb_aqi_category": cpcb_result.get("category"),
-            "dominant_pollutant": cpcb_result.get("dominant_pollutant"),
         },
         "evidence_stack": {
             "ground_sensor": {
@@ -130,6 +165,7 @@ def main() -> None:
                 "does_not_prove": remote_sensing.get("does_not_prove"),
                 "caveats": remote_sensing.get("caveats"),
             },
+            "wind_sector_evidence": wind_sector,
         },
         "agent_outputs": {
             "groq_supervisor_decision": decision,
@@ -140,6 +176,7 @@ def main() -> None:
         "claims_to_avoid": decision.get("claims_to_avoid", []),
         "limitations": decision.get("limitations", []),
     }
+
     payload = clean_text(payload)
 
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
@@ -150,8 +187,12 @@ def main() -> None:
     print(f"Saved integrated AirGuard demo output to: {OUTPUT_PATH}")
     print("Headline:", payload["executive_summary"]["headline"])
     print("Monitoring priority:", payload["executive_summary"]["monitoring_priority"])
-    print("Current AQI:", payload["executive_summary"]["current_estimated_aqi"])
+    print("Current estimated AQI:", payload["executive_summary"]["current_estimated_aqi"])
+    print("CPCB AQI:", payload["executive_summary"]["cpcb_aqi"])
+    print("Dominant pollutant:", payload["executive_summary"]["dominant_pollutant"])
     print("Remote sensing signal:", payload["executive_summary"]["remote_sensing_signal"])
+    print("Wind from sector:", payload["executive_summary"]["wind_from_sector"])
+    print("Wind speed class:", payload["executive_summary"]["wind_speed_class"])
     print("Citizen advisory level:", payload["executive_summary"]["citizen_advisory_level"])
 
 

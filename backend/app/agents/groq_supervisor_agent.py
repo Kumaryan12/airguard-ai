@@ -8,7 +8,8 @@ from backend.app.tools.forecast_validation_tool import ForecastValidationTool
 from backend.app.tools.evidence_guardrail_tool import EvidenceGuardrailTool
 from backend.app.tools.intervention_ranking_tool import InterventionRankingTool
 from ml.config import PROJECT_ROOT
-
+from backend.app.tools.wind_sector_evidence_tool import WindSectorEvidenceTool
+from backend.app.tools.cpcb_aqi_tool import CpcbAqiTool
 
 OUTPUT_PATH = PROJECT_ROOT / "backend" / "data" / "sample" / "groq_supervisor_agent_output.json"
 
@@ -44,12 +45,16 @@ class GroqSupervisorAgent:
         evidence = EvidenceGuardrailTool().run()
         interventions = InterventionRankingTool().run()
         remote_sensing = RemoteSensingEvidenceTool().run()
+        cpcb_aqi = CpcbAqiTool().run()
+        wind_sector = WindSectorEvidenceTool().run()
 
         return {
             "forecast_validation_tool": forecast,
             "evidence_guardrail_tool": evidence,
             "intervention_ranking_tool": interventions,
             "remote_sensing_evidence_tool": remote_sensing,
+            "cpcb_aqi": cpcb_aqi,
+            "wind_sector": wind_sector,
         }
 
     def _build_prompt(self, tool_outputs: Dict[str, Any]) -> list[dict]:
@@ -78,7 +83,13 @@ When referencing remote sensing, include the Sentinel-5P image count if availabl
 Use the exact satellite signal label from the tool, for example "moderate_relative_no2".
 Recommended actions must preserve concrete evidence values where available.
 When describing forecast method selection, always qualify it as "in the current one-station real-data benchmark" unless broader validation exists.
+Use wind-sector evidence when available.
 
+If wind-sector evidence says wind speed class is low, mention low-wind / poor-dispersion / local accumulation risk when relevant.
+
+If wind-sector evidence increases confidence for road dust or traffic corridor exposure, include that in reasoning_summary and key_evidence_used.
+
+Do not claim exact upwind source attribution unless exact source-coordinate geometry exists. Phrase it as "wind-sector screening supports" or "meteorological conditions strengthen the hypothesis."
 Prefer "medium-priority preventive action" over "medium-term interventions" for the current scenario.
 
 Safe claims must not sound globally true unless the tool evidence validates them globally.
@@ -97,6 +108,13 @@ Return ONLY valid JSON matching this schema:
   "Forecast method: rolling_mean_24h; RMSE improvement vs persistence: 24.48%",
   "PM10/PM2.5 ratio: 3.92; road density: 26.05 km/km²",
   "Sentinel-5P NO2 signal: moderate_relative_no2 from 269 images"
+  key_evidence_used should include concrete values where available:
+- CPCB AQI and dominant pollutant
+- estimated/model AQI
+- forecast RMSE improvement
+- PM10/PM2.5 ratio and road density
+- Sentinel-5P NO2 signal and image count
+- wind direction sector and wind speed class
 ]
   "recommended_actions": [
     {
