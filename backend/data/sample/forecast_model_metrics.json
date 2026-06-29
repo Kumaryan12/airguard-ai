@@ -1,0 +1,23 @@
+{
+  "pm25": {
+    "mae": 9.289603738430023,
+    "rmse": 13.637235041435344,
+    "baseline_rmse": 18.794642127590105,
+    "rmse_improvement_vs_persistence": 0.27440836867991253
+  },
+  "pm10": {
+    "mae": 9.551104802463342,
+    "rmse": 13.006195215901135,
+    "baseline_rmse": 17.750883446191036,
+    "rmse_improvement_vs_persistence": 0.2672930755628397
+  },
+  "aqi": {
+    "mae": 18.640334295666282,
+    "rmse": 27.99150067618016,
+    "baseline_rmse": 38.45711054194977,
+    "rmse_improvement_vs_persistence": 0.2721371865510675
+  },
+  "aqi_category_accuracy": 0.8291958041958042,
+  "high_pollution_event_recall": 0.07520891364902507,
+  "baseline_high_pollution_event_recall": 0.13554392088423503
+}

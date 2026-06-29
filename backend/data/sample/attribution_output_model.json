@@ -1,0 +1,421 @@
+{
+  "city": "Chennai",
+  "generated_at": "2026-06-29T10:04:55.343525",
+  "model_type": "lightgbm_multiclass_source_attribution",
+  "target": "dominant probable source driver at 24h horizon",
+  "metrics_summary": {
+    "accuracy": 0.7741258741258741,
+    "macro_f1": 0.5550362349256635,
+    "weighted_f1": 0.7818226233594048,
+    "class_labels": [
+      "construction",
+      "industrial",
+      "meteorology",
+      "road_dust",
+      "traffic",
+      "waste_burning"
+    ],
+    "classification_report": {
+      "construction": {
+        "precision": 0.8640350877192983,
+        "recall": 0.9292452830188679,
+        "f1-score": 0.8954545454545455,
+        "support": 424.0
+      },
+      "industrial": {
+        "precision": 0.37398373983739835,
+        "recall": 0.38333333333333336,
+        "f1-score": 0.3786008230452675,
+        "support": 120.0
+      },
+      "meteorology": {
+        "precision": 0.11421319796954314,
+        "recall": 0.12396694214876033,
+        "f1-score": 0.11889035667107001,
+        "support": 363.0
+      },
+      "road_dust": {
+        "precision": 0.9012023000522739,
+        "recall": 0.820366404948846,
+        "f1-score": 0.8588865363058912,
+        "support": 4203.0
+      },
+      "traffic": {
+        "precision": 0.592741935483871,
+        "recall": 0.9,
+        "f1-score": 0.7147487844408428,
+        "support": 490.0
+      },
+      "waste_burning": {
+        "precision": 0.3050847457627119,
+        "recall": 0.45,
+        "f1-score": 0.36363636363636365,
+        "support": 120.0
+      },
+      "accuracy": 0.7741258741258741,
+      "macro avg": {
+        "precision": 0.5252101678041827,
+        "recall": 0.6011519939083013,
+        "f1-score": 0.5550362349256635,
+        "support": 5720.0
+      },
+      "weighted avg": {
+        "precision": 0.7985131646564236,
+        "recall": 0.7741258741258741,
+        "f1-score": 0.7818226233594048,
+        "support": 5720.0
+      }
+    }
+  },
+  "wards": [
+    {
+      "ward_id": "W01",
+      "ward_name": "T Nagar",
+      "lat": 13.0418,
+      "lon": 80.2341,
+      "dominant_sources": [
+        {
+          "source": "road dust / resuspension",
+          "source_key": "road_dust",
+          "probability": 0.9361034195453011,
+          "evidence": [
+            "dense road network exposure",
+            "PM10-heavy particulate pattern"
+          ]
+        },
+        {
+          "source": "meteorological trapping",
+          "source_key": "meteorology",
+          "probability": 0.043252697185218625,
+          "evidence": [
+            "high humidity supports pollutant accumulation"
+          ]
+        },
+        {
+          "source": "waste burning / thermal anomaly",
+          "source_key": "waste_burning",
+          "probability": 0.02003634743663914,
+          "evidence": [
+            "night-time burning-prone window"
+          ]
+        }
+      ],
+      "attribution_confidence": "high",
+      "causal_warning": "Probabilistic attribution, not direct causal proof."
+    },
+    {
+      "ward_id": "W02",
+      "ward_name": "Guindy",
+      "lat": 13.0108,
+      "lon": 80.2206,
+      "dominant_sources": [
+        {
+          "source": "waste burning / thermal anomaly",
+          "source_key": "waste_burning",
+          "probability": 0.8690774046186702,
+          "evidence": [
+            "night-time burning-prone window",
+            "sharp fine-particle elevation"
+          ]
+        },
+        {
+          "source": "road dust / resuspension",
+          "source_key": "road_dust",
+          "probability": 0.12587691094824924,
+          "evidence": [
+            "dense road network exposure",
+            "PM10-heavy particulate pattern",
+            "low green-cover buffering"
+          ]
+        },
+        {
+          "source": "meteorological trapping",
+          "source_key": "meteorology",
+          "probability": 0.005028895410986751,
+          "evidence": [
+            "model probability supported by combined spatiotemporal feature pattern"
+          ]
+        }
+      ],
+      "attribution_confidence": "high",
+      "causal_warning": "Probabilistic attribution, not direct causal proof."
+    },
+    {
+      "ward_id": "W03",
+      "ward_name": "Manali",
+      "lat": 13.1667,
+      "lon": 80.2667,
+      "dominant_sources": [
+        {
+          "source": "road dust / resuspension",
+          "source_key": "road_dust",
+          "probability": 0.6644523199215924,
+          "evidence": [
+            "dense road network exposure"
+          ]
+        },
+        {
+          "source": "waste burning / thermal anomaly",
+          "source_key": "waste_burning",
+          "probability": 0.2742695371241665,
+          "evidence": [
+            "night-time burning-prone window"
+          ]
+        },
+        {
+          "source": "meteorological trapping",
+          "source_key": "meteorology",
+          "probability": 0.06057248861661009,
+          "evidence": [
+            "high humidity supports pollutant accumulation"
+          ]
+        }
+      ],
+      "attribution_confidence": "medium-high",
+      "causal_warning": "Probabilistic attribution, not direct causal proof."
+    },
+    {
+      "ward_id": "W04",
+      "ward_name": "Velachery",
+      "lat": 12.9755,
+      "lon": 80.2207,
+      "dominant_sources": [
+        {
+          "source": "road dust / resuspension",
+          "source_key": "road_dust",
+          "probability": 0.9056873578581113,
+          "evidence": [
+            "PM10-heavy particulate pattern"
+          ]
+        },
+        {
+          "source": "waste burning / thermal anomaly",
+          "source_key": "waste_burning",
+          "probability": 0.05967115932985683,
+          "evidence": [
+            "night-time burning-prone window"
+          ]
+        },
+        {
+          "source": "meteorological trapping",
+          "source_key": "meteorology",
+          "probability": 0.03459295526716393,
+          "evidence": [
+            "model probability supported by combined spatiotemporal feature pattern"
+          ]
+        }
+      ],
+      "attribution_confidence": "high",
+      "causal_warning": "Probabilistic attribution, not direct causal proof."
+    },
+    {
+      "ward_id": "W05",
+      "ward_name": "Anna Nagar",
+      "lat": 13.085,
+      "lon": 80.2101,
+      "dominant_sources": [
+        {
+          "source": "waste burning / thermal anomaly",
+          "source_key": "waste_burning",
+          "probability": 0.5988077856596599,
+          "evidence": [
+            "night-time burning-prone window"
+          ]
+        },
+        {
+          "source": "road dust / resuspension",
+          "source_key": "road_dust",
+          "probability": 0.3810776101726263,
+          "evidence": [
+            "dense road network exposure",
+            "PM10-heavy particulate pattern"
+          ]
+        },
+        {
+          "source": "meteorological trapping",
+          "source_key": "meteorology",
+          "probability": 0.020106737418426262,
+          "evidence": [
+            "model probability supported by combined spatiotemporal feature pattern"
+          ]
+        }
+      ],
+      "attribution_confidence": "medium-high",
+      "causal_warning": "Probabilistic attribution, not direct causal proof."
+    },
+    {
+      "ward_id": "W06",
+      "ward_name": "Adyar",
+      "lat": 13.0067,
+      "lon": 80.2578,
+      "dominant_sources": [
+        {
+          "source": "road dust / resuspension",
+          "source_key": "road_dust",
+          "probability": 0.5826040075382307,
+          "evidence": [
+            "PM10-heavy particulate pattern",
+            "low green-cover buffering"
+          ]
+        },
+        {
+          "source": "waste burning / thermal anomaly",
+          "source_key": "waste_burning",
+          "probability": 0.37976937222153856,
+          "evidence": [
+            "night-time burning-prone window"
+          ]
+        },
+        {
+          "source": "meteorological trapping",
+          "source_key": "meteorology",
+          "probability": 0.037588854807042035,
+          "evidence": [
+            "model probability supported by combined spatiotemporal feature pattern"
+          ]
+        }
+      ],
+      "attribution_confidence": "medium-high",
+      "causal_warning": "Probabilistic attribution, not direct causal proof."
+    },
+    {
+      "ward_id": "W07",
+      "ward_name": "Porur",
+      "lat": 13.0382,
+      "lon": 80.1565,
+      "dominant_sources": [
+        {
+          "source": "construction dust",
+          "source_key": "construction",
+          "probability": 0.9926461635397584,
+          "evidence": [
+            "high construction activity proxy",
+            "coarse particle signature"
+          ]
+        },
+        {
+          "source": "waste burning / thermal anomaly",
+          "source_key": "waste_burning",
+          "probability": 0.006763531260447383,
+          "evidence": [
+            "night-time burning-prone window"
+          ]
+        },
+        {
+          "source": "meteorological trapping",
+          "source_key": "meteorology",
+          "probability": 0.00042378020321517533,
+          "evidence": [
+            "model probability supported by combined spatiotemporal feature pattern"
+          ]
+        }
+      ],
+      "attribution_confidence": "high",
+      "causal_warning": "Probabilistic attribution, not direct causal proof."
+    },
+    {
+      "ward_id": "W08",
+      "ward_name": "Perambur",
+      "lat": 13.121,
+      "lon": 80.2326,
+      "dominant_sources": [
+        {
+          "source": "waste burning / thermal anomaly",
+          "source_key": "waste_burning",
+          "probability": 0.6029242322863819,
+          "evidence": [
+            "night-time burning-prone window"
+          ]
+        },
+        {
+          "source": "road dust / resuspension",
+          "source_key": "road_dust",
+          "probability": 0.3825687551294687,
+          "evidence": [
+            "dense road network exposure",
+            "PM10-heavy particulate pattern"
+          ]
+        },
+        {
+          "source": "meteorological trapping",
+          "source_key": "meteorology",
+          "probability": 0.013728967744851227,
+          "evidence": [
+            "model probability supported by combined spatiotemporal feature pattern"
+          ]
+        }
+      ],
+      "attribution_confidence": "medium-high",
+      "causal_warning": "Probabilistic attribution, not direct causal proof."
+    },
+    {
+      "ward_id": "W09",
+      "ward_name": "Tambaram",
+      "lat": 12.9249,
+      "lon": 80.1,
+      "dominant_sources": [
+        {
+          "source": "waste burning / thermal anomaly",
+          "source_key": "waste_burning",
+          "probability": 0.5793059784064681,
+          "evidence": [
+            "night-time burning-prone window"
+          ]
+        },
+        {
+          "source": "road dust / resuspension",
+          "source_key": "road_dust",
+          "probability": 0.4076248808189936,
+          "evidence": [
+            "PM10-heavy particulate pattern"
+          ]
+        },
+        {
+          "source": "meteorological trapping",
+          "source_key": "meteorology",
+          "probability": 0.01303475823812505,
+          "evidence": [
+            "model probability supported by combined spatiotemporal feature pattern"
+          ]
+        }
+      ],
+      "attribution_confidence": "medium-high",
+      "causal_warning": "Probabilistic attribution, not direct causal proof."
+    },
+    {
+      "ward_id": "W10",
+      "ward_name": "Royapuram",
+      "lat": 13.1137,
+      "lon": 80.2954,
+      "dominant_sources": [
+        {
+          "source": "road dust / resuspension",
+          "source_key": "road_dust",
+          "probability": 0.7446528561921226,
+          "evidence": [
+            "PM10-heavy particulate pattern",
+            "low green-cover buffering"
+          ]
+        },
+        {
+          "source": "waste burning / thermal anomaly",
+          "source_key": "waste_burning",
+          "probability": 0.2083828341631994,
+          "evidence": [
+            "night-time burning-prone window"
+          ]
+        },
+        {
+          "source": "meteorological trapping",
+          "source_key": "meteorology",
+          "probability": 0.042636093594230526,
+          "evidence": [
+            "model probability supported by combined spatiotemporal feature pattern"
+          ]
+        }
+      ],
+      "attribution_confidence": "high",
+      "causal_warning": "Probabilistic attribution, not direct causal proof."
+    }
+  ]
+}

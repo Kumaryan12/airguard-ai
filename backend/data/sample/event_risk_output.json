@@ -1,0 +1,172 @@
+{
+  "city": "Chennai",
+  "generated_at": "2026-06-29T10:03:14.874528",
+  "model_type": "lightgbm_event_risk_classifier",
+  "event_definition": "AQI >= 201 within 24h",
+  "metrics_summary": {
+    "threshold": 0.32999999999999996,
+    "accuracy": 0.7421328671328671,
+    "precision": 0.14276568501920614,
+    "recall": 0.6211699164345403,
+    "f1": 0.23217074440395627,
+    "average_precision": 0.15948237989175662,
+    "roc_auc": 0.7573504922324079,
+    "confusion_matrix": [
+      [
+        4022,
+        1339
+      ],
+      [
+        136,
+        223
+      ]
+    ],
+    "classification_report": {
+      "0": {
+        "precision": 0.9672919672919673,
+        "recall": 0.7502331654542063,
+        "f1-score": 0.8450467486080471,
+        "support": 5361.0
+      },
+      "1": {
+        "precision": 0.14276568501920614,
+        "recall": 0.6211699164345403,
+        "f1-score": 0.23217074440395627,
+        "support": 359.0
+      },
+      "accuracy": 0.7421328671328671,
+      "macro avg": {
+        "precision": 0.5550288261555867,
+        "recall": 0.6857015409443733,
+        "f1-score": 0.5386087465060017,
+        "support": 5720.0
+      },
+      "weighted avg": {
+        "precision": 0.9155428527227503,
+        "recall": 0.7421328671328671,
+        "f1-score": 0.8065812791134197,
+        "support": 5720.0
+      }
+    },
+    "chosen_threshold_info": {
+      "threshold": 0.32999999999999996,
+      "precision": 0.14276568501920614,
+      "recall": 0.6211699164345403,
+      "f1": 0.23217074440395627
+    },
+    "train_positive_event_rate": 0.0595446584938704,
+    "test_positive_event_rate": 0.06276223776223776
+  },
+  "wards": [
+    {
+      "ward_id": "W01",
+      "ward_name": "T Nagar",
+      "lat": 13.0418,
+      "lon": 80.2341,
+      "event_threshold_aqi": 201,
+      "high_pollution_probability_24h": 0.09068661618427136,
+      "high_pollution_event_predicted": false,
+      "current_aqi": 119.92183827570354,
+      "target_horizon_hours": 24
+    },
+    {
+      "ward_id": "W02",
+      "ward_name": "Guindy",
+      "lat": 13.0108,
+      "lon": 80.2206,
+      "event_threshold_aqi": 201,
+      "high_pollution_probability_24h": 0.7050928783761002,
+      "high_pollution_event_predicted": true,
+      "current_aqi": 168.4852016858246,
+      "target_horizon_hours": 24
+    },
+    {
+      "ward_id": "W03",
+      "ward_name": "Manali",
+      "lat": 13.1667,
+      "lon": 80.2667,
+      "event_threshold_aqi": 201,
+      "high_pollution_probability_24h": 0.22648416239476332,
+      "high_pollution_event_predicted": false,
+      "current_aqi": 131.70617275724848,
+      "target_horizon_hours": 24
+    },
+    {
+      "ward_id": "W04",
+      "ward_name": "Velachery",
+      "lat": 12.9755,
+      "lon": 80.2207,
+      "event_threshold_aqi": 201,
+      "high_pollution_probability_24h": 0.0024952905037518543,
+      "high_pollution_event_predicted": false,
+      "current_aqi": 71.64472294098243,
+      "target_horizon_hours": 24
+    },
+    {
+      "ward_id": "W05",
+      "ward_name": "Anna Nagar",
+      "lat": 13.085,
+      "lon": 80.2101,
+      "event_threshold_aqi": 201,
+      "high_pollution_probability_24h": 0.12118635319969684,
+      "high_pollution_event_predicted": false,
+      "current_aqi": 112.10237666827445,
+      "target_horizon_hours": 24
+    },
+    {
+      "ward_id": "W06",
+      "ward_name": "Adyar",
+      "lat": 13.0067,
+      "lon": 80.2578,
+      "event_threshold_aqi": 201,
+      "high_pollution_probability_24h": 0.03407556099243302,
+      "high_pollution_event_predicted": false,
+      "current_aqi": 115.7216073767856,
+      "target_horizon_hours": 24
+    },
+    {
+      "ward_id": "W07",
+      "ward_name": "Porur",
+      "lat": 13.0382,
+      "lon": 80.1565,
+      "event_threshold_aqi": 201,
+      "high_pollution_probability_24h": 0.35095314537934086,
+      "high_pollution_event_predicted": true,
+      "current_aqi": 162.06744082754275,
+      "target_horizon_hours": 24
+    },
+    {
+      "ward_id": "W08",
+      "ward_name": "Perambur",
+      "lat": 13.121,
+      "lon": 80.2326,
+      "event_threshold_aqi": 201,
+      "high_pollution_probability_24h": 0.47859456026532804,
+      "high_pollution_event_predicted": true,
+      "current_aqi": 133.3886000335981,
+      "target_horizon_hours": 24
+    },
+    {
+      "ward_id": "W09",
+      "ward_name": "Tambaram",
+      "lat": 12.9249,
+      "lon": 80.1,
+      "event_threshold_aqi": 201,
+      "high_pollution_probability_24h": 0.16844508637799432,
+      "high_pollution_event_predicted": false,
+      "current_aqi": 110.94711818404404,
+      "target_horizon_hours": 24
+    },
+    {
+      "ward_id": "W10",
+      "ward_name": "Royapuram",
+      "lat": 13.1137,
+      "lon": 80.2954,
+      "event_threshold_aqi": 201,
+      "high_pollution_probability_24h": 0.4878976540716733,
+      "high_pollution_event_predicted": true,
+      "current_aqi": 137.18170669001654,
+      "target_horizon_hours": 24
+    }
+  ]
+}

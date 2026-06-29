@@ -1,0 +1,61 @@
+{
+  "agent_name": "Real Forecast Agent",
+  "agent_type": "validation_and_model_selection_agent",
+  "city": "Chennai",
+  "station_location_id": 2586,
+  "deployment_mode": "baseline_operational_ml_experimental",
+  "selected_forecast_method": "rolling_mean_24h",
+  "selected_method_type": "baseline",
+  "selected_method_metrics": {
+    "mae": 28.85142799785867,
+    "rmse": 40.80657232899059,
+    "r2": -0.007922148096550341,
+    "aqi_category_accuracy": 0.5460385438972163,
+    "rmse_improvement_vs_persistence": 0.24476515160742177
+  },
+  "best_learned_model": {
+    "name": "ridge",
+    "metrics": {
+      "mae": 28.990355062076073,
+      "rmse": 41.61685453488346,
+      "r2": -0.04834749210433187,
+      "aqi_category_accuracy": 0.5417558886509636,
+      "type": "learned_model",
+      "rmse_improvement_vs_persistence": 0.22976871049521522
+    }
+  },
+  "best_baseline": {
+    "name": "rolling_mean_24h",
+    "metrics": {
+      "mae": 28.85142799785867,
+      "rmse": 40.80657232899059,
+      "r2": -0.007922148096550341,
+      "aqi_category_accuracy": 0.5460385438972163,
+      "type": "baseline",
+      "rmse_improvement_vs_persistence": 0.24476515160742177
+    }
+  },
+  "persistence_baseline": {
+    "mae": 34.73192291220556,
+    "rmse": 54.031633227521496,
+    "r2": -0.7671074025018259,
+    "aqi_category_accuracy": 0.5289079229122056,
+    "type": "baseline",
+    "rmse_improvement_vs_persistence": 0.0
+  },
+  "latest_station_context": {
+    "location_id": 2586,
+    "latest_datetime_utc": "2026-06-29T08:15:00Z",
+    "max_age_hours": 2.52,
+    "estimated_aqi": 76.275,
+    "estimated_aqi_category": "Satisfactory",
+    "dispersion_risk": "medium",
+    "data_status": "fresh_realtime_sensor_snapshot"
+  },
+  "rationale": "The strongest operational baseline outperforms the learned models on the current one-station real-data validation. AirGuard should use the validated baseline for operational forecast display and keep the learned model as experimental until more stations, longer history, and official AQI labels are available.",
+  "warnings": [
+    "This is a first real-data benchmark on one OpenAQ station using approximate AQI. It validates the training/evaluation pipeline, but citywide deployment requires more stations, official AQI calculation, and longer historical coverage.",
+    "Do not claim the learned model beats all baselines unless benchmark results show it.",
+    "Current AQI target is approximate and must later be replaced with official CPCB breakpoint AQI."
+  ]
+}

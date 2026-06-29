@@ -1,0 +1,94 @@
+{
+  "project": "AirGuard AI",
+  "city": "Chennai",
+  "generated_at": "2026-06-29T10:59:07.265211",
+  "output_type": "real_geospatial_sensor_snapshot",
+  "description": "Fresh OpenAQ station snapshot enriched with OSM geospatial features and dispersion/source-evidence hypotheses.",
+  "stations": [
+    {
+      "location_id": 2586,
+      "latitude": 13.164544,
+      "longitude": 80.26285,
+      "latest_datetime_utc": "2026-06-29T08:15:00Z",
+      "max_age_hours": 2.52,
+      "pollutants": {
+        "pm25": 14.42,
+        "pm10": 56.5,
+        "no2": null,
+        "so2": null,
+        "co": 0.7,
+        "o3": 8.35
+      },
+      "weather": {
+        "temperature": 36.72,
+        "humidity": 40.21,
+        "wind_speed": 1.12,
+        "wind_direction": 97.18
+      },
+      "aqi_estimate": {
+        "estimated_aqi": 76.275,
+        "estimated_aqi_category": "Satisfactory",
+        "note": "Approximate AQI estimate; not official CPCB breakpoint AQI yet."
+      },
+      "dispersion": {
+        "pm10_pm25_ratio": 3.9181692094313454,
+        "dispersion_penalty": 0.6803,
+        "dispersion_risk": "medium"
+      },
+      "geospatial_features": {
+        "search_radius_meters": 1500,
+        "total_road_length_km": 184.1342,
+        "major_road_length_km": 32.2891,
+        "road_density_km_per_km2": 26.0497,
+        "major_road_density_km_per_km2": 4.568,
+        "nearest_major_road_m": 22.61,
+        "industrial_poi_count": 15,
+        "construction_poi_count": 0,
+        "green_poi_count": 1,
+        "school_poi_count": 1,
+        "hospital_poi_count": 5,
+        "vulnerability_poi_count": 6
+      },
+      "geospatial_hypotheses": [
+        {
+          "source": "road dust / resuspension",
+          "evidence": [
+            "PM10/PM2.5 ratio is high (3.92)",
+            "road density is 26.05 km/km\u00b2"
+          ],
+          "confidence": "medium"
+        },
+        {
+          "source": "traffic emissions",
+          "evidence": [
+            "major road density is 4.57 km/km\u00b2",
+            "fresh station snapshot includes traffic-relevant pollutants where available"
+          ],
+          "confidence": "low-medium"
+        },
+        {
+          "source": "industrial influence",
+          "evidence": [
+            "15 industrial-tagged OSM features within radius"
+          ],
+          "confidence": "low-medium"
+        },
+        {
+          "source": "meteorological trapping / poor dispersion",
+          "evidence": [
+            "dispersion risk is medium"
+          ],
+          "confidence": "medium"
+        }
+      ],
+      "data_status": "fresh_realtime_sensor_snapshot",
+      "data_source": "OpenAQ latest measurements",
+      "geospatial_source": "OpenStreetMap via OSMnx"
+    }
+  ],
+  "limitations": [
+    "AQI estimate is approximate and not yet official CPCB breakpoint AQI.",
+    "Geospatial hypotheses are evidence signals, not causal proof.",
+    "Current snapshot uses latest available OpenAQ station data; historical model training still uses mechanism-driven synthetic data."
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "project": "AirGuard AI",
+  "city": "Chennai",
+  "person_1_owner": "AI/ML + Geospatial Intelligence",
+  "models": {
+    "forecasting": {
+      "model_type": "LightGBM regression",
+      "targets": [
+        "PM2.5",
+        "PM10",
+        "AQI"
+      ],
+      "aqi_rmse": 27.99150067618016,
+      "baseline_aqi_rmse": 38.45711054194977,
+      "aqi_rmse_improvement_vs_persistence": 0.2721371865510675,
+      "aqi_category_accuracy": 0.8291958041958042
+    },
+    "event_risk": {
+      "model_type": "LightGBM binary classifier",
+      "event_definition": "AQI >= 201 within 24h",
+      "precision": 0.14276568501920614,
+      "recall": 0.6211699164345403,
+      "f1": 0.23217074440395627,
+      "roc_auc": 0.7573504922324079,
+      "chosen_threshold": 0.32999999999999996
+    },
+    "source_attribution": {
+      "model_type": "LightGBM multiclass classifier",
+      "classes": [
+        "construction",
+        "industrial",
+        "meteorology",
+        "road_dust",
+        "traffic",
+        "waste_burning"
+      ],
+      "accuracy": 0.7741258741258741,
+      "macro_f1": 0.5550362349256635,
+      "weighted_f1": 0.7818226233594048
+    }
+  },
+  "technical_notes": [
+    "Forecasting model improves AQI RMSE versus persistence baseline.",
+    "Event-risk model is used as hotspot trigger because regression alone misses rare spikes.",
+    "Source attribution is probabilistic and not direct causal proof.",
+    "Meteorology is treated as a confounding/dispersion driver and remains harder to classify."
+  ]
+}
