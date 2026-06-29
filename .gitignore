@@ -310,3 +310,4 @@ build/
 *.pt
 *.pth
 *.onnx
+.env
