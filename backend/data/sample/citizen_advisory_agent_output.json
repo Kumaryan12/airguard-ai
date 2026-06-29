@@ -1,0 +1,41 @@
+{
+  "agent_name": "Groq Citizen Advisory Agent",
+  "agent_type": "llm_public_health_advisory_agent",
+  "llm_provider": "Groq",
+  "model": "llama-3.3-70b-versatile",
+  "input_summary": {
+    "source": "Groq Supervisor Agent output + real station snapshot",
+    "mode": "LLM-generated English/Hindi advisory with deterministic safety repair layer"
+  },
+  "advisory": {
+    "advisory_level": "low",
+    "panic_level": "none",
+    "english_advisory": "The current air quality near Chennai station area is satisfactory. People with pre-existing conditions should stay aware and reduce exposure near dusty or high-traffic roads if they feel discomfort.",
+    "hindi_advisory": "वर्तमान वायु गुणवत्ता संतोषजनक है। घबराने की जरूरत नहीं है। दमा, हृदय रोग, बच्चों, वृद्ध लोगों और आउटडोर वर्कर्स को धूल भरी या भारी यातायात वाली सड़कों के पास असुविधा महसूस होने पर जागरूक रहना चाहिए और एक्सपोजर कम करना चाहिए।",
+    "who_should_take_care": [
+      "People with asthma",
+      "People with heart disease",
+      "Children",
+      "Elderly people",
+      "Outdoor workers"
+    ],
+    "recommended_precautions": [
+      "Stay aware of air quality",
+      "Reduce exposure near dusty roads",
+      "Reduce exposure near high-traffic roads"
+    ],
+    "what_not_to_claim": [
+      "Industrial influence as confirmed pollution source",
+      "Learned ML model as best operational forecast method"
+    ],
+    "data_limitations": [
+      "Approximate AQI target",
+      "Satellite measurement limitations",
+      "Clouds and retrieval quality affecting satellite coverage"
+    ],
+    "safety_repair": {
+      "repairs_applied": [],
+      "used_llm_output_directly": true
+    }
+  }
+}

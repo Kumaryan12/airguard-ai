@@ -1,0 +1,46 @@
+{
+  "project": "AirGuard AI",
+  "city": "Chennai",
+  "output_type": "remote_sensing_evidence",
+  "satellite_layer": "Sentinel-5P OFFL NO2",
+  "dataset_id": "COPERNICUS/S5P/OFFL/L3_NO2",
+  "band": "tropospheric_NO2_column_number_density",
+  "date_from": "2026-06-01",
+  "date_to": "2026-06-29",
+  "location": {
+    "latitude": 13.164544,
+    "longitude": 80.26285
+  },
+  "collection_image_count": 269,
+  "station_buffer_km": 10.0,
+  "station_no2_stats": {
+    "mean": 8.057583665367708e-05,
+    "median": 7.848612831773196e-05,
+    "p90": 0.00010600837986481677,
+    "p95": 0.00011009306420433844
+  },
+  "city_no2_stats": {
+    "mean": 5.726983474820997e-05,
+    "median": 5.203579244271771e-05,
+    "p90": 8.258290515114931e-05,
+    "p95": 0.00010461170271588643
+  },
+  "relative_no2_signal": "moderate_relative_no2",
+  "evidence_role": "regional combustion pollution context",
+  "supports": [
+    "regional combustion-related pollution context",
+    "traffic corridor exposure hypothesis",
+    "industrial influence screening, not confirmation"
+  ],
+  "does_not_prove": [
+    "exact ground-level AQI",
+    "confirmed source attribution",
+    "specific factory or road segment responsibility"
+  ],
+  "caveats": [
+    "Sentinel-5P NO2 is a column measurement, not direct ground-level AQI.",
+    "Satellite evidence supports regional combustion-pattern context, not causal source proof.",
+    "Clouds, retrieval quality, and satellite overpass timing can affect coverage."
+  ],
+  "generated_at": "2026-06-29T13:33:16.157184Z"
+}

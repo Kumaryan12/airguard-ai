@@ -1,0 +1,344 @@
+{
+  "agent_name": "Groq Supervisor Agent",
+  "agent_type": "llm_tool_orchestrating_reasoning_agent",
+  "llm_provider": "Groq",
+  "model": "llama-3.3-70b-versatile",
+  "tool_outputs": {
+    "forecast_validation_tool": {
+      "tool_name": "Forecast Validation Tool",
+      "tool_type": "deterministic_forecast_model_selection_tool",
+      "city": "Chennai",
+      "station_location_id": 2586,
+      "deployment_mode": "baseline_operational_ml_experimental",
+      "selected_forecast_method": "rolling_mean_24h",
+      "selected_method_type": "baseline",
+      "selected_method_metrics": {
+        "mae": 28.85142799785867,
+        "rmse": 40.80657232899059,
+        "r2": -0.007922148096550341,
+        "aqi_category_accuracy": 0.5460385438972163,
+        "rmse_improvement_vs_persistence": 0.24476515160742177
+      },
+      "best_learned_model": {
+        "name": "ridge",
+        "metrics": {
+          "mae": 28.990355062076073,
+          "rmse": 41.61685453488346,
+          "r2": -0.04834749210433187,
+          "aqi_category_accuracy": 0.5417558886509636,
+          "type": "learned_model",
+          "rmse_improvement_vs_persistence": 0.22976871049521522
+        }
+      },
+      "best_baseline": {
+        "name": "rolling_mean_24h",
+        "metrics": {
+          "mae": 28.85142799785867,
+          "rmse": 40.80657232899059,
+          "r2": -0.007922148096550341,
+          "aqi_category_accuracy": 0.5460385438972163,
+          "type": "baseline",
+          "rmse_improvement_vs_persistence": 0.24476515160742177
+        }
+      },
+      "persistence_baseline": {
+        "mae": 34.73192291220556,
+        "rmse": 54.031633227521496,
+        "r2": -0.7671074025018259,
+        "aqi_category_accuracy": 0.5289079229122056,
+        "type": "baseline",
+        "rmse_improvement_vs_persistence": 0.0
+      },
+      "latest_station_context": {
+        "location_id": 2586,
+        "latest_datetime_utc": "2026-06-29T08:15:00Z",
+        "max_age_hours": 2.52,
+        "estimated_aqi": 76.275,
+        "estimated_aqi_category": "Satisfactory",
+        "dispersion_risk": "medium",
+        "data_status": "fresh_realtime_sensor_snapshot"
+      },
+      "rationale": "The strongest operational baseline outperforms the learned models on the current one-station real-data validation. AirGuard should use the validated baseline for operational forecast display and keep the learned model as experimental until more stations, longer history, and official AQI labels are available.",
+      "warnings": [
+        "This is a first real-data benchmark on one OpenAQ station using approximate AQI. It validates the training/evaluation pipeline, but citywide deployment requires more stations, official AQI calculation, and longer historical coverage.",
+        "Do not claim the learned model beats all baselines unless benchmark results show it.",
+        "Current AQI target is approximate and must later be replaced with official CPCB breakpoint AQI."
+      ]
+    },
+    "evidence_guardrail_tool": {
+      "tool_name": "Evidence Guardrail Tool",
+      "agent_type": "claim_verification_and_overclaim_prevention_agent",
+      "city": "Chennai",
+      "station_location_id": 2586,
+      "claims_checked": 8,
+      "claims": [
+        {
+          "claim": "AirGuard has a real-data forecast validation pipeline.",
+          "status": "supported",
+          "evidence": [
+            "Real forecast benchmark metrics exist.",
+            "Selected forecast method: rolling_mean_24h",
+            "Test RMSE: 40.81",
+            "RMSE improvement vs persistence: 24.48%"
+          ]
+        },
+        {
+          "claim": "The learned ML model is currently the best operational forecast method.",
+          "status": "weak_or_not_supported",
+          "evidence": [
+            "Best learned model: ridge",
+            "Selected operational method: rolling_mean_24h",
+            "The selected method is a baseline, not the learned model."
+          ],
+          "safe_rewording": "The best learned model is competitive, but the current validated operational method is the 24-hour rolling mean baseline until more data is available."
+        },
+        {
+          "claim": "The operational forecast method improves over persistence.",
+          "status": "supported",
+          "evidence": [
+            "RMSE improvement vs persistence: 24.48%",
+            "Persistence RMSE: 54.03",
+            "Selected method RMSE: 40.81"
+          ]
+        },
+        {
+          "claim": "Current station reading is fresh enough for real-time context.",
+          "status": "supported",
+          "evidence": [
+            "Data status: fresh_realtime_sensor_snapshot",
+            "Sensor age: 2.52 hours",
+            "Latest timestamp: 2026-06-29T08:15:00Z"
+          ]
+        },
+        {
+          "claim": "Road dust / resuspension is a plausible source hypothesis.",
+          "status": "supported",
+          "evidence": [
+            "PM10/PM2.5 ratio: 3.92",
+            "Road density: 26.05 km/km\u00b2",
+            "Nearest major road: 22.61 m"
+          ],
+          "safe_rewording": "The evidence supports road dust/resuspension as a plausible hypothesis, not a confirmed causal source."
+        },
+        {
+          "claim": "Industrial influence is confirmed as a pollution source.",
+          "status": "do_not_claim",
+          "evidence": [
+            "Industrial OSM POIs within radius: 15",
+            "POI proximity alone does not prove emissions impact."
+          ],
+          "safe_rewording": "Industrial influence is a low-to-medium confidence hypothesis because industrial-tagged OSM features exist nearby. Confirmation requires emissions inventory, wind-sector analysis, or source apportionment."
+        },
+        {
+          "claim": "The system has real geospatial evidence for source hypotheses.",
+          "status": "supported",
+          "evidence": [
+            "Road density: 26.0497 km/km\u00b2",
+            "Major road density: 4.568 km/km\u00b2",
+            "Industrial POIs: 15",
+            "Vulnerability POIs: 6",
+            "Hypotheses generated: 4"
+          ]
+        },
+        {
+          "claim": "The source attribution is causal proof.",
+          "status": "do_not_claim",
+          "evidence": [
+            "Current evidence uses pollutant ratios, OSM proximity, and dispersion proxies.",
+            "No receptor model, emissions inventory, or chemical source apportionment is used yet."
+          ],
+          "safe_rewording": "The current system generates evidence-backed source hypotheses, not causal proof."
+        }
+      ],
+      "summary": {
+        "supported": 5,
+        "partially_supported": 0,
+        "weak_or_not_supported": 1,
+        "do_not_claim": 2
+      },
+      "recommended_demo_framing": "AirGuard AI has validated real-data ingestion, forecasting benchmarks, sensor freshness checks, and geospatial evidence generation. Source outputs should be presented as evidence-backed hypotheses, not causal proof."
+    },
+    "intervention_ranking_tool": {
+      "tool_name": "Intervention Ranking Tool",
+      "tool_type": "deterministic_intervention_mapping_tool",
+      "city": "Chennai",
+      "stations": [
+        {
+          "location_id": 2586,
+          "latest_datetime_utc": "2026-06-29T08:15:00Z",
+          "aqi_context": {
+            "estimated_aqi": 76.275,
+            "estimated_aqi_category": "Satisfactory",
+            "note": "Approximate AQI estimate; not official CPCB breakpoint AQI yet."
+          },
+          "data_status": "fresh_realtime_sensor_snapshot",
+          "ranked_interventions": [
+            {
+              "intervention": "Targeted mechanical road sweeping and water misting",
+              "source_addressed": "road dust / resuspension",
+              "priority": "medium",
+              "why": [
+                "PM10-heavy signal and road density 26.0497 km/km\u00b2",
+                "Action is low-regret and operationally deployable."
+              ],
+              "required_evidence_before_enforcement": [
+                "field inspection photos",
+                "road dust accumulation confirmation",
+                "ward engineer confirmation"
+              ],
+              "intervention_type": "municipal_operations"
+            },
+            {
+              "intervention": "Traffic flow and idling control near major road corridor",
+              "source_addressed": "traffic emissions / road corridor exposure",
+              "priority": "medium",
+              "why": [
+                "Major road density 4.568 km/km\u00b2",
+                "Major road lies close to the monitoring point."
+              ],
+              "required_evidence_before_enforcement": [
+                "traffic police confirmation",
+                "peak-hour congestion observation",
+                "NO2/CO corroboration if available"
+              ],
+              "intervention_type": "traffic_management"
+            },
+            {
+              "intervention": "Schedule dust and traffic interventions during poor-dispersion window",
+              "source_addressed": "meteorological trapping / poor dispersion",
+              "priority": "medium",
+              "why": [
+                "Dispersion risk is medium",
+                "Low wind can allow pollutants to accumulate locally."
+              ],
+              "required_evidence_before_enforcement": [
+                "weather forecast confirmation",
+                "wind speed and direction trend"
+              ],
+              "intervention_type": "timing_optimisation"
+            },
+            {
+              "intervention": "Screen nearby industrial units for compliance risk",
+              "source_addressed": "possible industrial influence",
+              "priority": "low-medium",
+              "why": [
+                "15 industrial-tagged OSM features within radius",
+                "POI proximity is not causal proof, so action should begin with screening."
+              ],
+              "required_evidence_before_enforcement": [
+                "official industry inventory",
+                "stack/emission permit records",
+                "wind-sector analysis",
+                "field inspection"
+              ],
+              "intervention_type": "inspection_screening"
+            },
+            {
+              "intervention": "Prepare targeted advisory for nearby sensitive receptors",
+              "source_addressed": "public health exposure",
+              "priority": "low",
+              "why": [
+                "6 school/hospital POIs within radius",
+                "Current estimated AQI category is Satisfactory"
+              ],
+              "required_evidence_before_enforcement": [
+                "school/hospital list validation",
+                "local authority approval for advisory"
+              ],
+              "intervention_type": "public_health_advisory"
+            }
+          ]
+        }
+      ],
+      "warning": "Interventions are candidate operational actions. Enforcement requires human review and additional official evidence."
+    },
+    "remote_sensing_evidence_tool": {
+      "tool_name": "Remote Sensing Evidence Tool",
+      "tool_type": "satellite_context_tool",
+      "available": true,
+      "satellite_layer": "Sentinel-5P OFFL NO2",
+      "dataset_id": "COPERNICUS/S5P/OFFL/L3_NO2",
+      "date_from": "2026-06-01",
+      "date_to": "2026-06-29",
+      "collection_image_count": 269,
+      "relative_no2_signal": "moderate_relative_no2",
+      "station_no2_stats": {
+        "mean": 8.057583665367708e-05,
+        "median": 7.848612831773196e-05,
+        "p90": 0.00010600837986481677,
+        "p95": 0.00011009306420433844
+      },
+      "city_no2_stats": {
+        "mean": 5.726983474820997e-05,
+        "median": 5.203579244271771e-05,
+        "p90": 8.258290515114931e-05,
+        "p95": 0.00010461170271588643
+      },
+      "evidence_role": "regional combustion pollution context",
+      "supports": [
+        "regional combustion-related pollution context",
+        "traffic corridor exposure hypothesis",
+        "industrial influence screening, not confirmation"
+      ],
+      "does_not_prove": [
+        "exact ground-level AQI",
+        "confirmed source attribution",
+        "specific factory or road segment responsibility"
+      ],
+      "interpretation": "Satellite NO2 shows a moderate relative combustion-related signal near the station buffer.",
+      "caveats": [
+        "Sentinel-5P NO2 is a column measurement, not direct ground-level AQI.",
+        "Satellite evidence supports regional combustion-pattern context, not causal source proof.",
+        "Clouds, retrieval quality, and satellite overpass timing can affect coverage."
+      ]
+    }
+  },
+  "decision": {
+    "intervention_required_now": false,
+    "monitoring_priority": "medium",
+    "decision_headline": "Current AQI is Satisfactory; Medium-Priority Preventive Actions Recommended",
+    "reasoning_summary": "The current estimated AQI is 76.275, categorized as Satisfactory. The selected forecast method is the 24-hour rolling mean baseline, which improves over persistence by 24.48%. Road dust/resuspension is a plausible source hypothesis due to the PM10/PM2.5 ratio of 3.92 and road density of 26.05 km/km\u00b2. Sentinel-5P NO2 signal indicates a moderate relative combustion-related signal, supporting the traffic corridor exposure hypothesis.",
+    "selected_forecast_method": "rolling_mean_24h",
+    "key_evidence_used": [
+      "Current estimated AQI: 76.275 (Satisfactory)",
+      "Forecast method: rolling_mean_24h; RMSE improvement vs persistence: 24.48%",
+      "PM10/PM2.5 ratio: 3.92; road density: 26.05 km/km\u00b2",
+      "Sentinel-5P NO2 signal: moderate_relative_no2 from 269 images"
+    ],
+    "recommended_actions": [
+      {
+        "action": "Targeted mechanical road sweeping and water misting",
+        "priority": "medium",
+        "why": [
+          "PM10-heavy signal and road density 26.05 km/km\u00b2",
+          "Action is low-regret and operationally deployable."
+        ],
+        "human_review_required": true
+      },
+      {
+        "action": "Traffic flow and idling control near major road corridor",
+        "priority": "medium",
+        "why": [
+          "Major road density 4.568 km/km\u00b2",
+          "Major road lies close to the monitoring point."
+        ],
+        "human_review_required": true
+      }
+    ],
+    "safe_claims": [
+      "The current estimated AQI is 76.275, categorized as Satisfactory.",
+      "Road dust/resuspension is a plausible hypothesis for the current AQI.",
+      "The 24-hour rolling mean baseline is the selected forecast method, improving over persistence by 24.48%."
+    ],
+    "claims_to_avoid": [
+      "Industrial influence is confirmed as a pollution source.",
+      "The learned ML model is currently the best operational forecast method."
+    ],
+    "human_review_required": true,
+    "limitations": [
+      "The current AQI target is approximate and must later be replaced with official CPCB breakpoint AQI.",
+      "Sentinel-5P NO2 is a column measurement, not direct ground-level AQI.",
+      "Clouds, retrieval quality, and satellite overpass timing can affect satellite coverage."
+    ]
+  }
+}

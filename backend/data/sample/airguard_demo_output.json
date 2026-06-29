@@ -1,0 +1,304 @@
+{
+  "project": "AirGuard AI",
+  "output_type": "integrated_demo_payload",
+  "generated_at": "2026-06-29T14:07:05.780029Z",
+  "city": "Chennai",
+  "station_location_id": 2586,
+  "executive_summary": {
+    "headline": "Current AQI is Satisfactory; Medium-Priority Preventive Actions Recommended",
+    "monitoring_priority": "medium",
+    "intervention_required_now": false,
+    "current_estimated_aqi": 76.275,
+    "current_estimated_aqi_category": "Satisfactory",
+    "data_status": "fresh_realtime_sensor_snapshot",
+    "sensor_age_hours": 2.52,
+    "selected_forecast_method": "rolling_mean_24h",
+    "remote_sensing_signal": "moderate_relative_no2",
+    "sentinel5p_image_count": 269,
+    "citizen_advisory_level": "low",
+    "panic_level": "none"
+  },
+  "evidence_stack": {
+    "ground_sensor": {
+      "latest_datetime_utc": "2026-06-29T08:15:00Z",
+      "max_age_hours": 2.52,
+      "pollutants": {
+        "pm25": 14.42,
+        "pm10": 56.5,
+        "no2": null,
+        "so2": null,
+        "co": 0.7,
+        "o3": 8.35
+      },
+      "weather": {
+        "temperature": 36.72,
+        "humidity": 40.21,
+        "wind_speed": 1.12,
+        "wind_direction": 97.18
+      },
+      "aqi_estimate": {
+        "estimated_aqi": 76.275,
+        "estimated_aqi_category": "Satisfactory",
+        "note": "Approximate AQI estimate; not official CPCB breakpoint AQI yet."
+      },
+      "dispersion": {
+        "pm10_pm25_ratio": 3.9181692094313454,
+        "dispersion_penalty": 0.6803,
+        "dispersion_risk": "medium"
+      }
+    },
+    "forecast_validation": {
+      "best_overall": "rolling_mean_24h",
+      "best_learned_model": "ridge",
+      "important_warning": "This is a first real-data benchmark on one OpenAQ station using approximate AQI. It validates the training/evaluation pipeline, but citywide deployment requires more stations, official AQI calculation, and longer historical coverage.",
+      "results": {
+        "persistence_current_aqi": {
+          "mae": 34.73192291220556,
+          "rmse": 54.031633227521496,
+          "r2": -0.7671074025018259,
+          "aqi_category_accuracy": 0.5289079229122056,
+          "type": "baseline",
+          "rmse_improvement_vs_persistence": 0.0
+        },
+        "seasonal_24h_lag": {
+          "mae": 35.07560599571734,
+          "rmse": 51.03543985279132,
+          "r2": -0.5765599139787667,
+          "aqi_category_accuracy": 0.4796573875802998,
+          "type": "baseline",
+          "rmse_improvement_vs_persistence": 0.05545257834634615
+        },
+        "rolling_mean_24h": {
+          "mae": 28.85142799785867,
+          "rmse": 40.80657232899059,
+          "r2": -0.007922148096550341,
+          "aqi_category_accuracy": 0.5460385438972163,
+          "type": "baseline",
+          "rmse_improvement_vs_persistence": 0.24476515160742177
+        },
+        "ridge": {
+          "mae": 28.990355062076073,
+          "rmse": 41.61685453488346,
+          "r2": -0.04834749210433187,
+          "aqi_category_accuracy": 0.5417558886509636,
+          "type": "learned_model",
+          "rmse_improvement_vs_persistence": 0.22976871049521522
+        },
+        "extra_trees": {
+          "mae": 30.53534927829088,
+          "rmse": 43.90961367062874,
+          "r2": -0.1670406614602591,
+          "aqi_category_accuracy": 0.5546038543897216,
+          "type": "learned_model",
+          "rmse_improvement_vs_persistence": 0.18733506563220115
+        },
+        "random_forest": {
+          "mae": 31.426400971793594,
+          "rmse": 45.02030471381881,
+          "r2": -0.22682782075938057,
+          "aqi_category_accuracy": 0.5481798715203426,
+          "type": "learned_model",
+          "rmse_improvement_vs_persistence": 0.16677875487784968
+        },
+        "lightgbm_conservative": {
+          "mae": 32.065674083719884,
+          "rmse": 46.20926514524895,
+          "r2": -0.29248311989557374,
+          "aqi_category_accuracy": 0.5460385438972163,
+          "type": "learned_model",
+          "rmse_improvement_vs_persistence": 0.14477385958949976
+        }
+      }
+    },
+    "geospatial_context": {
+      "search_radius_meters": 1500,
+      "total_road_length_km": 184.1342,
+      "major_road_length_km": 32.2891,
+      "road_density_km_per_km2": 26.0497,
+      "major_road_density_km_per_km2": 4.568,
+      "nearest_major_road_m": 22.61,
+      "industrial_poi_count": 15,
+      "construction_poi_count": 0,
+      "green_poi_count": 1,
+      "school_poi_count": 1,
+      "hospital_poi_count": 5,
+      "vulnerability_poi_count": 6
+    },
+    "source_hypotheses": [
+      {
+        "source": "road dust / resuspension",
+        "evidence": [
+          "PM10/PM2.5 ratio is high (3.92)",
+          "road density is 26.05 km/km²"
+        ],
+        "confidence": "medium"
+      },
+      {
+        "source": "traffic emissions",
+        "evidence": [
+          "major road density is 4.57 km/km²",
+          "fresh station snapshot includes traffic-relevant pollutants where available"
+        ],
+        "confidence": "low-medium"
+      },
+      {
+        "source": "industrial influence",
+        "evidence": [
+          "15 industrial-tagged OSM features within radius"
+        ],
+        "confidence": "low-medium"
+      },
+      {
+        "source": "meteorological trapping / poor dispersion",
+        "evidence": [
+          "dispersion risk is medium"
+        ],
+        "confidence": "medium"
+      }
+    ],
+    "remote_sensing": {
+      "satellite_layer": "Sentinel-5P OFFL NO2",
+      "dataset_id": "COPERNICUS/S5P/OFFL/L3_NO2",
+      "collection_image_count": 269,
+      "relative_no2_signal": "moderate_relative_no2",
+      "station_no2_stats": {
+        "mean": 8.057583665367708e-05,
+        "median": 7.848612831773196e-05,
+        "p90": 0.00010600837986481677,
+        "p95": 0.00011009306420433844
+      },
+      "city_no2_stats": {
+        "mean": 5.726983474820997e-05,
+        "median": 5.203579244271771e-05,
+        "p90": 8.258290515114931e-05,
+        "p95": 0.00010461170271588643
+      },
+      "interpretation": null,
+      "does_not_prove": [
+        "exact ground-level AQI",
+        "confirmed source attribution",
+        "specific factory or road segment responsibility"
+      ],
+      "caveats": [
+        "Sentinel-5P NO2 is a column measurement, not direct ground-level AQI.",
+        "Satellite evidence supports regional combustion-pattern context, not causal source proof.",
+        "Clouds, retrieval quality, and satellite overpass timing can affect coverage."
+      ]
+    }
+  },
+  "agent_outputs": {
+    "groq_supervisor_decision": {
+      "intervention_required_now": false,
+      "monitoring_priority": "medium",
+      "decision_headline": "Current AQI is Satisfactory; Medium-Priority Preventive Actions Recommended",
+      "reasoning_summary": "The current estimated AQI is 76.275, categorized as Satisfactory. The selected forecast method is the 24-hour rolling mean baseline, which improves over persistence by 24.48%. Road dust/resuspension is a plausible source hypothesis due to the PM10/PM2.5 ratio of 3.92 and road density of 26.05 km/km². Sentinel-5P NO2 signal indicates a moderate relative combustion-related signal, supporting the traffic corridor exposure hypothesis.",
+      "selected_forecast_method": "rolling_mean_24h",
+      "key_evidence_used": [
+        "Current estimated AQI: 76.275 (Satisfactory)",
+        "Forecast method: rolling_mean_24h; RMSE improvement vs persistence: 24.48%",
+        "PM10/PM2.5 ratio: 3.92; road density: 26.05 km/km²",
+        "Sentinel-5P NO2 signal: moderate_relative_no2 from 269 images"
+      ],
+      "recommended_actions": [
+        {
+          "action": "Targeted mechanical road sweeping and water misting",
+          "priority": "medium",
+          "why": [
+            "PM10-heavy signal and road density 26.05 km/km²",
+            "Action is low-regret and operationally deployable."
+          ],
+          "human_review_required": true
+        },
+        {
+          "action": "Traffic flow and idling control near major road corridor",
+          "priority": "medium",
+          "why": [
+            "Major road density 4.568 km/km²",
+            "Major road lies close to the monitoring point."
+          ],
+          "human_review_required": true
+        }
+      ],
+      "safe_claims": [
+        "The current estimated AQI is 76.275, categorized as Satisfactory.",
+        "Road dust/resuspension is a plausible hypothesis for the current AQI.",
+        "The 24-hour rolling mean baseline is the selected forecast method, improving over persistence by 24.48%."
+      ],
+      "claims_to_avoid": [
+        "Industrial influence is confirmed as a pollution source.",
+        "The learned ML model is currently the best operational forecast method."
+      ],
+      "human_review_required": true,
+      "limitations": [
+        "The current AQI target is approximate and must later be replaced with official CPCB breakpoint AQI.",
+        "Sentinel-5P NO2 is a column measurement, not direct ground-level AQI.",
+        "Clouds, retrieval quality, and satellite overpass timing can affect satellite coverage."
+      ]
+    },
+    "citizen_advisory": {
+      "advisory_level": "low",
+      "panic_level": "none",
+      "english_advisory": "The current air quality near Chennai station area is satisfactory. People with pre-existing conditions should stay aware and reduce exposure near dusty or high-traffic roads if they feel discomfort.",
+      "hindi_advisory": "वर्तमान वायु गुणवत्ता संतोषजनक है। घबराने की जरूरत नहीं है। दमा, हृदय रोग, बच्चों, वृद्ध लोगों और आउटडोर वर्कर्स को धूल भरी या भारी यातायात वाली सड़कों के पास असुविधा महसूस होने पर जागरूक रहना चाहिए और एक्सपोजर कम करना चाहिए।",
+      "who_should_take_care": [
+        "People with asthma",
+        "People with heart disease",
+        "Children",
+        "Elderly people",
+        "Outdoor workers"
+      ],
+      "recommended_precautions": [
+        "Stay aware of air quality",
+        "Reduce exposure near dusty roads",
+        "Reduce exposure near high-traffic roads"
+      ],
+      "what_not_to_claim": [
+        "Industrial influence as confirmed pollution source",
+        "Learned ML model as best operational forecast method"
+      ],
+      "data_limitations": [
+        "Approximate AQI target",
+        "Satellite measurement limitations",
+        "Clouds and retrieval quality affecting satellite coverage"
+      ],
+      "safety_repair": {
+        "repairs_applied": [],
+        "used_llm_output_directly": true
+      }
+    }
+  },
+  "recommended_actions": [
+    {
+      "action": "Targeted mechanical road sweeping and water misting",
+      "priority": "medium",
+      "why": [
+        "PM10-heavy signal and road density 26.05 km/km²",
+        "Action is low-regret and operationally deployable."
+      ],
+      "human_review_required": true
+    },
+    {
+      "action": "Traffic flow and idling control near major road corridor",
+      "priority": "medium",
+      "why": [
+        "Major road density 4.568 km/km²",
+        "Major road lies close to the monitoring point."
+      ],
+      "human_review_required": true
+    }
+  ],
+  "safe_claims": [
+    "The current estimated AQI is 76.275, categorized as Satisfactory.",
+    "Road dust/resuspension is a plausible hypothesis for the current AQI.",
+    "The 24-hour rolling mean baseline is the selected forecast method, improving over persistence by 24.48%."
+  ],
+  "claims_to_avoid": [
+    "Industrial influence is confirmed as a pollution source.",
+    "The learned ML model is currently the best operational forecast method."
+  ],
+  "limitations": [
+    "The current AQI target is approximate and must later be replaced with official CPCB breakpoint AQI.",
+    "Sentinel-5P NO2 is a column measurement, not direct ground-level AQI.",
+    "Clouds, retrieval quality, and satellite overpass timing can affect satellite coverage."
+  ]
+}

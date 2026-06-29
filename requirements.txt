@@ -16,3 +16,8 @@ joblib
 shap
 osmnx
 networkx
+openai
+groq
+fastapi
+uvicorn
+earthengine-api

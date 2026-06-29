@@ -14,16 +14,16 @@ REAL_SNAPSHOT_PATH = (
 )
 
 
-class RealForecastAgent:
+class ForecastValidationTool:
     """
-    Forecast validation agent.
+Forecast validation tool.
 
-    Role:
-    - Reads real historical forecast benchmark results.
-    - Selects the best validated operational forecast method.
-    - Separates best overall method from best learned ML model.
-    - Produces an honest decision summary for dashboard/decision memo use.
-    """
+Role:
+- Reads real historical forecast benchmark results.
+- Selects the best validated forecast method.
+- Separates operational baseline from learned ML model.
+- This is a deterministic model-selection tool, not an autonomous agent.
+"""
 
     def __init__(
         self,
@@ -97,8 +97,8 @@ class RealForecastAgent:
             }
 
         return {
-            "agent_name": "Real Forecast Agent",
-            "agent_type": "validation_and_model_selection_agent",
+            "tool_name": "Forecast Validation Tool",
+            "tool_type": "deterministic_forecast_model_selection_tool",
             "city": benchmark["city"],
             "station_location_id": benchmark["station_location_id"],
             "deployment_mode": deployment_mode,
@@ -133,8 +133,8 @@ class RealForecastAgent:
 
 
 def main() -> None:
-    agent = RealForecastAgent()
-    result = agent.run()
+    tool = ForecastValidationTool()
+    result = tool.run()
 
     print(json.dumps(result, indent=2))
 
