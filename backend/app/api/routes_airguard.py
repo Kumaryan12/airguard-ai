@@ -52,6 +52,20 @@ def get_forecast_validation() -> Dict[str, Any]:
 def get_supervisor_output() -> Dict[str, Any]:
     return read_json_file(DATA_DIR / "supervisor_agent_output.json")
 
+
+@router.get("/citizen-advisory")
+def get_citizen_advisory() -> Dict[str, Any]:
+    return read_json_file(DATA_DIR / "citizen_advisory_agent_output.json")
+
+@router.get("/demo-output")
+def get_airguard_demo_output() -> Dict[str, Any]:
+    return read_json_file(DATA_DIR / "airguard_demo_output.json")
+
+@router.get("/cpcb-aqi")
+def get_cpcb_aqi() -> Dict[str, Any]:
+    return read_json_file(DATA_DIR / "cpcb_aqi_output.json")
+
+
 @router.get("/remote-sensing")
 def get_remote_sensing_evidence() -> Dict[str, Any]:
     return read_json_file(DATA_DIR / "remote_sensing_evidence.json")

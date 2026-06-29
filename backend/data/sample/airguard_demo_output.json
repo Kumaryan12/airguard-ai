@@ -1,7 +1,7 @@
 {
   "project": "AirGuard AI",
   "output_type": "integrated_demo_payload",
-  "generated_at": "2026-06-29T14:07:05.780029Z",
+  "generated_at": "2026-06-29T14:28:36.926493Z",
   "city": "Chennai",
   "station_location_id": 2586,
   "executive_summary": {
@@ -16,7 +16,10 @@
     "remote_sensing_signal": "moderate_relative_no2",
     "sentinel5p_image_count": 269,
     "citizen_advisory_level": "low",
-    "panic_level": "none"
+    "panic_level": "none",
+    "cpcb_aqi": 56.5,
+    "cpcb_aqi_category": "Satisfactory",
+    "dominant_pollutant": "pm10"
   },
   "evidence_stack": {
     "ground_sensor": {
@@ -45,6 +48,48 @@
         "pm10_pm25_ratio": 3.9181692094313454,
         "dispersion_penalty": 0.6803,
         "dispersion_risk": "medium"
+      },
+      "cpcb_aqi_calculation": {
+        "tool_name": "CPCB AQI Tool",
+        "tool_type": "official_breakpoint_aqi_calculation_tool",
+        "city": "Chennai",
+        "stations": [
+          {
+            "location_id": 2586,
+            "latest_datetime_utc": "2026-06-29T08:15:00Z",
+            "data_status": "fresh_realtime_sensor_snapshot",
+            "cpcb_aqi": {
+              "aqi": 56.5,
+              "category": "Satisfactory",
+              "dominant_pollutant": "pm10",
+              "sub_indices": {
+                "pm25": {
+                  "concentration": 14.42,
+                  "sub_index": 24.03,
+                  "category": "Good"
+                },
+                "pm10": {
+                  "concentration": 56.5,
+                  "sub_index": 56.5,
+                  "category": "Satisfactory"
+                },
+                "co": {
+                  "concentration": 0.7,
+                  "sub_index": 35.0,
+                  "category": "Good"
+                },
+                "o3": {
+                  "concentration": 8.35,
+                  "sub_index": 8.35,
+                  "category": "Good"
+                }
+              },
+              "method": "CPCB breakpoint AQI",
+              "status": "computed_from_available_pollutants"
+            },
+            "note": "CPCB breakpoint AQI computed from available latest pollutant values. Missing pollutants are not fabricated. This is not a final regulatory AQI unless correct averaging windows are used."
+          }
+        ]
       }
     },
     "forecast_validation": {
