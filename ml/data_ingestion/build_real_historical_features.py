@@ -208,6 +208,66 @@ def merge_openmeteo_weather(df: pd.DataFrame) -> pd.DataFrame:
 
     return merged
 
+def apply_physical_sanity_filters(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Removes physically implausible sensor values before target creation.
+    These are conservative sanity limits for prototype validation, not regulatory limits.
+    """
+
+    df = df.copy()
+
+    sanity_ranges = {
+        "pm25": (0, 1000),
+        "pm10": (0, 1500),
+        "no2": (0, 500),
+        "o3": (0, 500),
+        "so2": (0, 500),
+        "co": (0, 50000),
+        "temperature": (-10, 60),
+        "humidity": (0, 100),
+        "wind_speed": (0, 40),
+        "wind_direction": (0, 360),
+        "precipitation": (0, 500),
+        "surface_pressure": (800, 1100),
+    }
+
+    for col, (low, high) in sanity_ranges.items():
+        if col not in df.columns:
+            continue
+
+        invalid_mask = (df[col] < low) | (df[col] > high)
+        invalid_count = int(invalid_mask.sum())
+
+        if invalid_count > 0:
+            print(f"Sanity filter: setting {invalid_count} invalid {col} values to NaN")
+
+        df.loc[invalid_mask, col] = np.nan
+
+    return df
+
+
+def cap_extreme_aqi_values(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Caps approximate AQI to prevent rare sensor glitches from dominating training.
+    This should later be replaced with official CPCB AQI calculation and QA flags.
+    """
+
+    df = df.copy()
+
+    before = len(df)
+
+    df = df[
+        (df["estimated_aqi"].notna())
+        & (df["estimated_aqi"] >= 0)
+        & (df["estimated_aqi"] <= 500)
+    ].copy()
+
+    after = len(df)
+
+    print(f"AQI quality filter applied: {before} -> {after}")
+
+    return df
+
 
 def main() -> None:
     if not INPUT_PATH.exists():
@@ -236,11 +296,13 @@ def main() -> None:
 
     pivot = pivot.sort_values(["location_id", "timestamp"]).reset_index(drop=True)
     pivot = merge_openmeteo_weather(pivot)
+    pivot = apply_physical_sanity_filters(pivot)
     pivot = add_time_features(pivot)
     pivot = add_dispersion_features(pivot)
 
     pivot["estimated_aqi"] = pivot.apply(estimate_simple_aqi, axis=1)
     pivot["estimated_aqi_category"] = pivot["estimated_aqi"].apply(classify_aqi)
+    pivot = cap_extreme_aqi_values(pivot)
 
     if "pm25" in pivot.columns and "pm10" in pivot.columns:
         pivot["pm10_pm25_ratio"] = pivot["pm10"] / pivot["pm25"].replace(0, np.nan)
