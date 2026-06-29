@@ -1,0 +1,103 @@
+{
+  "agent_name": "Decision Memo Agent",
+  "agent_type": "official_decision_synthesis_agent",
+  "city": "Chennai",
+  "station_location_id": 2586,
+  "headline": "No emergency intervention; medium-priority monitoring and preventive action recommended",
+  "operational_status": {
+    "intervention_required_now": false,
+    "monitoring_priority": "medium",
+    "current_estimated_aqi": 76.275,
+    "current_estimated_aqi_category": "Satisfactory",
+    "dispersion_risk": "medium",
+    "data_status": "fresh_realtime_sensor_snapshot"
+  },
+  "forecast_validation": {
+    "selected_method": "rolling_mean_24h",
+    "selected_method_type": "baseline",
+    "rmse": 40.80657232899059,
+    "mae": 28.85142799785867,
+    "rmse_improvement_vs_persistence_percent": 24.48,
+    "best_learned_model": "ridge",
+    "why_this_method": "The strongest operational baseline outperforms the learned models on the current one-station real-data validation. AirGuard should use the validated baseline for operational forecast display and keep the learned model as experimental until more stations, longer history, and official AQI labels are available."
+  },
+  "evidence_summary": {
+    "claims_checked": 8,
+    "supported_claims": 5,
+    "weak_or_not_supported": 1,
+    "blocked_overclaims": 2,
+    "safe_claims": [
+      "AirGuard has a real-data forecast validation pipeline.",
+      "The operational forecast method improves over persistence.",
+      "Current station reading is fresh enough for real-time context.",
+      "Road dust / resuspension is a plausible source hypothesis.",
+      "The system has real geospatial evidence for source hypotheses."
+    ],
+    "claims_to_avoid": [
+      {
+        "claim": "Industrial influence is confirmed as a pollution source.",
+        "safe_rewording": "Industrial influence is a low-to-medium confidence hypothesis because industrial-tagged OSM features exist nearby. Confirmation requires emissions inventory, wind-sector analysis, or source apportionment."
+      },
+      {
+        "claim": "The source attribution is causal proof.",
+        "safe_rewording": "The current system generates evidence-backed source hypotheses, not causal proof."
+      }
+    ]
+  },
+  "recommended_actions": [
+    {
+      "rank": 1,
+      "action": "Targeted mechanical road sweeping and water misting",
+      "priority": "medium",
+      "source_addressed": "road dust / resuspension",
+      "why": [
+        "PM10-heavy signal and road density 26.0497 km/km\u00b2",
+        "Action is low-regret and operationally deployable."
+      ],
+      "human_review_required": true,
+      "evidence_required_before_enforcement": [
+        "field inspection photos",
+        "road dust accumulation confirmation",
+        "ward engineer confirmation"
+      ]
+    },
+    {
+      "rank": 2,
+      "action": "Traffic flow and idling control near major road corridor",
+      "priority": "medium",
+      "source_addressed": "traffic emissions / road corridor exposure",
+      "why": [
+        "Major road density 4.568 km/km\u00b2",
+        "Major road lies close to the monitoring point."
+      ],
+      "human_review_required": true,
+      "evidence_required_before_enforcement": [
+        "traffic police confirmation",
+        "peak-hour congestion observation",
+        "NO2/CO corroboration if available"
+      ]
+    },
+    {
+      "rank": 3,
+      "action": "Schedule dust and traffic interventions during poor-dispersion window",
+      "priority": "medium",
+      "source_addressed": "meteorological trapping / poor dispersion",
+      "why": [
+        "Dispersion risk is medium",
+        "Low wind can allow pollutants to accumulate locally."
+      ],
+      "human_review_required": true,
+      "evidence_required_before_enforcement": [
+        "weather forecast confirmation",
+        "wind speed and direction trend"
+      ]
+    }
+  ],
+  "decision_text": "No emergency intervention; medium-priority monitoring and preventive action recommended. Current estimated AQI is 76.275 (Satisfactory) with medium dispersion risk. The system recommends medium monitoring priority. Enforcement should not be initiated solely from this output; field verification and official records are required.",
+  "limitations": [
+    "AQI is currently approximate, not official CPCB breakpoint AQI.",
+    "Source outputs are evidence-backed hypotheses, not causal proof.",
+    "Current real validation is based on one OpenAQ station.",
+    "Enforcement requires human review and official evidence."
+  ]
+}
