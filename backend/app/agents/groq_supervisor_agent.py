@@ -1,6 +1,6 @@
 import json
 from typing import Any, Dict, Optional
-
+from backend.app.tools.remote_sensing_evidence_tool import RemoteSensingEvidenceTool
 from pydantic import BaseModel, Field, ValidationError
 
 from backend.app.llm.groq_client import get_groq_client, get_groq_model
@@ -43,11 +43,13 @@ class GroqSupervisorAgent:
         forecast = ForecastValidationTool().run()
         evidence = EvidenceGuardrailTool().run()
         interventions = InterventionRankingTool().run()
+        remote_sensing = RemoteSensingEvidenceTool().run()
 
         return {
             "forecast_validation_tool": forecast,
             "evidence_guardrail_tool": evidence,
             "intervention_ranking_tool": interventions,
+            "remote_sensing_evidence_tool": remote_sensing,
         }
 
     def _build_prompt(self, tool_outputs: Dict[str, Any]) -> list[dict]:
@@ -64,6 +66,10 @@ You must not describe nearby industrial POIs as confirmed pollution sources.
 You may only say industrial influence is a low-confidence hypothesis requiring verification.
 For source attribution, use the phrase "plausible hypothesis" unless causal proof exists.
 Do not put industrial influence in safe_claims unless it includes a verification caveat.
+
+Use satellite NO2 only as regional combustion context.
+Do not claim satellite NO2 proves ground-level AQI or exact source attribution.
+If remote sensing is unavailable, continue using ground/geospatial evidence and mention the limitation.
 
 Return ONLY valid JSON matching this schema:
 ...

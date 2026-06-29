@@ -251,27 +251,67 @@
         }
       ],
       "warning": "Interventions are candidate operational actions. Enforcement requires human review and additional official evidence."
+    },
+    "remote_sensing_evidence_tool": {
+      "tool_name": "Remote Sensing Evidence Tool",
+      "tool_type": "satellite_context_tool",
+      "available": true,
+      "satellite_layer": "Sentinel-5P OFFL NO2",
+      "dataset_id": "COPERNICUS/S5P/OFFL/L3_NO2",
+      "date_from": "2026-06-01",
+      "date_to": "2026-06-29",
+      "collection_image_count": 269,
+      "relative_no2_signal": "moderate_relative_no2",
+      "station_no2_stats": {
+        "mean": 8.057583665367708e-05,
+        "median": 7.848612831773196e-05,
+        "p90": 0.00010600837986481677,
+        "p95": 0.00011009306420433844
+      },
+      "city_no2_stats": {
+        "mean": 5.726983474820997e-05,
+        "median": 5.203579244271771e-05,
+        "p90": 8.258290515114931e-05,
+        "p95": 0.00010461170271588643
+      },
+      "evidence_role": "regional combustion pollution context",
+      "supports": [
+        "regional combustion-related pollution context",
+        "traffic corridor exposure hypothesis",
+        "industrial influence screening, not confirmation"
+      ],
+      "does_not_prove": [
+        "exact ground-level AQI",
+        "confirmed source attribution",
+        "specific factory or road segment responsibility"
+      ],
+      "interpretation": "Satellite NO2 shows a moderate relative combustion-related signal near the station buffer.",
+      "caveats": [
+        "Sentinel-5P NO2 is a column measurement, not direct ground-level AQI.",
+        "Satellite evidence supports regional combustion-pattern context, not causal source proof.",
+        "Clouds, retrieval quality, and satellite overpass timing can affect coverage."
+      ]
     }
   },
   "decision": {
     "intervention_required_now": false,
     "monitoring_priority": "medium",
-    "decision_headline": "No immediate intervention required, but targeted road sweeping and traffic management are recommended for future consideration",
-    "reasoning_summary": "The current estimated AQI is 76.275, categorized as Satisfactory. However, the dispersion risk is medium, and evidence-backed hypotheses suggest road dust/resuspension and traffic emissions as potential sources. Targeted mechanical road sweeping, water misting, and traffic flow control are recommended for future consideration, pending additional evidence and human review.",
+    "decision_headline": "Continue monitoring with medium priority, consider targeted interventions",
+    "reasoning_summary": "The current estimated AQI is satisfactory, but dispersion risk is medium and road dust/resuspension is a plausible source hypothesis. Satellite NO2 provides regional combustion context, but does not prove exact ground-level AQI or confirmed source attribution.",
     "selected_forecast_method": "rolling_mean_24h",
     "key_evidence_used": [
-      "Estimated AQI: 76.275",
-      "Dispersion risk: medium",
-      "PM10-heavy signal and road density 26.0497 km/km^2",
-      "Major road density 4.568 km/km^2"
+      "latest station context",
+      "forecast validation results",
+      "geospatial evidence",
+      "satellite NO2 context"
     ],
     "recommended_actions": [
       {
         "action": "Targeted mechanical road sweeping and water misting",
         "priority": "medium",
         "why": [
-          "PM10-heavy signal and road density 26.0497 km/km^2",
-          "Action is low-regret and operationally deployable."
+          "PM10-heavy signal and road density",
+          "Action is low-regret and operationally deployable"
         ],
         "human_review_required": true
       },
@@ -279,25 +319,27 @@
         "action": "Traffic flow and idling control near major road corridor",
         "priority": "medium",
         "why": [
-          "Major road density 4.568 km/km^2",
-          "Major road lies close to the monitoring point."
+          "Major road density",
+          "Major road lies close to the monitoring point"
         ],
         "human_review_required": true
       }
     ],
     "safe_claims": [
-      "The current estimated AQI is 76.275, categorized as Satisfactory.",
-      "Road dust/resuspension is a plausible hypothesis for the current air quality.",
-      "Traffic emissions are a plausible hypothesis for the current air quality."
+      "AirGuard has a real-data forecast validation pipeline",
+      "The current estimated AQI is satisfactory",
+      "Road dust/resuspension is a plausible source hypothesis",
+      "Satellite NO2 provides regional combustion context"
     ],
     "claims_to_avoid": [
-      "Industrial influence is confirmed as a pollution source.",
-      "The source attribution is causal proof."
+      "Industrial influence is confirmed as a pollution source",
+      "The source attribution is causal proof"
     ],
     "human_review_required": true,
     "limitations": [
-      "The current AQI estimate is approximate and not official CPCB breakpoint AQI.",
-      "Additional evidence is required to confirm the sources of air pollution."
+      "Current AQI target is approximate and not official CPCB breakpoint AQI",
+      "Satellite NO2 is a column measurement, not direct ground-level AQI",
+      "Clouds, retrieval quality, and satellite overpass timing can affect coverage"
     ]
   }
 }

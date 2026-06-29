@@ -52,6 +52,10 @@ def get_forecast_validation() -> Dict[str, Any]:
 def get_supervisor_output() -> Dict[str, Any]:
     return read_json_file(DATA_DIR / "supervisor_agent_output.json")
 
+@router.get("/remote-sensing")
+def get_remote_sensing_evidence() -> Dict[str, Any]:
+    return read_json_file(DATA_DIR / "remote_sensing_evidence.json")
+
 
 @router.get("/groq-supervisor")
 def get_groq_supervisor_output() -> Dict[str, Any]:
