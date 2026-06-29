@@ -1,0 +1,243 @@
+{
+  "project": "AirGuard AI",
+  "city": "Chennai",
+  "generated_at": "2026-06-29T10:17:59.616171",
+  "explanation_type": "permutation_importance_plus_local_evidence",
+  "model_explained": "AQI 24h LightGBM forecasting model",
+  "global_top_features": [
+    {
+      "feature": "rush_hour",
+      "display_name": "rush-hour indicator",
+      "importance": 3.695326730518554,
+      "importance_std": 0.15814156813729993
+    },
+    {
+      "feature": "construction_score",
+      "display_name": "construction activity proxy",
+      "importance": 2.415613780105429,
+      "importance_std": 0.09937515478941823
+    },
+    {
+      "feature": "ward_id",
+      "display_name": "ward_id",
+      "importance": 1.7070276632548884,
+      "importance_std": 0.06852798810920237
+    },
+    {
+      "feature": "no2",
+      "display_name": "current NO2",
+      "importance": 1.3373435974590655,
+      "importance_std": 0.06952938517231116
+    },
+    {
+      "feature": "dayofweek",
+      "display_name": "day of week",
+      "importance": 1.0491295012561976,
+      "importance_std": 0.09269215788987112
+    },
+    {
+      "feature": "industrial_score",
+      "display_name": "industrial proximity score",
+      "importance": 0.8696738521452212,
+      "importance_std": 0.07688216555497218
+    },
+    {
+      "feature": "aqi",
+      "display_name": "current AQI",
+      "importance": 0.8529286642509906,
+      "importance_std": 0.08949714060410953
+    },
+    {
+      "feature": "hour",
+      "display_name": "hour of day",
+      "importance": 0.7181607256375298,
+      "importance_std": 0.07936151219623912
+    },
+    {
+      "feature": "waste_burning_event",
+      "display_name": "waste-burning event proxy",
+      "importance": 0.4625478576654789,
+      "importance_std": 0.011197393175515758
+    },
+    {
+      "feature": "traffic_proxy",
+      "display_name": "traffic proxy",
+      "importance": 0.14481899822924893,
+      "importance_std": 0.04695532797365466
+    },
+    {
+      "feature": "green_cover",
+      "display_name": "green cover",
+      "importance": 0.1174516377596766,
+      "importance_std": 0.02696055712179384
+    },
+    {
+      "feature": "road_density",
+      "display_name": "road density",
+      "importance": 0.10260686374998462,
+      "importance_std": 0.01555645303114795
+    }
+  ],
+  "wards": [
+    {
+      "ward_id": "W01",
+      "ward_name": "T Nagar",
+      "local_drivers": [
+        {
+          "driver": "dense road network",
+          "value": 0.8805287288594283,
+          "interpretation": "Dense roads increase exposure to traffic emissions and resuspended dust."
+        }
+      ]
+    },
+    {
+      "ward_id": "W02",
+      "ward_name": "Guindy",
+      "local_drivers": [
+        {
+          "driver": "dense road network",
+          "value": 0.8791592151163818,
+          "interpretation": "Dense roads increase exposure to traffic emissions and resuspended dust."
+        },
+        {
+          "driver": "high construction activity proxy",
+          "value": 0.7261247238128508,
+          "interpretation": "Construction activity can contribute coarse particulate dust."
+        },
+        {
+          "driver": "high industrial proximity score",
+          "value": 0.7508192739055773,
+          "interpretation": "Industrial proximity may contribute combustion and fine particulate load."
+        },
+        {
+          "driver": "elevated current PM2.5",
+          "value": 76.58418258446572,
+          "interpretation": "Current fine particulate pollution is already elevated."
+        },
+        {
+          "driver": "elevated current PM10",
+          "value": 111.9260715463358,
+          "interpretation": "Current coarse particulate pollution is already elevated."
+        }
+      ]
+    },
+    {
+      "ward_id": "W03",
+      "ward_name": "Manali",
+      "local_drivers": [
+        {
+          "driver": "dense road network",
+          "value": 0.7004296669038382,
+          "interpretation": "Dense roads increase exposure to traffic emissions and resuspended dust."
+        },
+        {
+          "driver": "high industrial proximity score",
+          "value": 0.7765239799280422,
+          "interpretation": "Industrial proximity may contribute combustion and fine particulate load."
+        }
+      ]
+    },
+    {
+      "ward_id": "W04",
+      "ward_name": "Velachery",
+      "local_drivers": [
+        {
+          "driver": "combined spatiotemporal signal",
+          "value": null,
+          "interpretation": "Prediction is driven by the combined pattern of weather, location, time, and current pollutant levels."
+        }
+      ]
+    },
+    {
+      "ward_id": "W05",
+      "ward_name": "Anna Nagar",
+      "local_drivers": [
+        {
+          "driver": "dense road network",
+          "value": 0.9701069359578932,
+          "interpretation": "Dense roads increase exposure to traffic emissions and resuspended dust."
+        }
+      ]
+    },
+    {
+      "ward_id": "W06",
+      "ward_name": "Adyar",
+      "local_drivers": [
+        {
+          "driver": "combined spatiotemporal signal",
+          "value": null,
+          "interpretation": "Prediction is driven by the combined pattern of weather, location, time, and current pollutant levels."
+        }
+      ]
+    },
+    {
+      "ward_id": "W07",
+      "ward_name": "Porur",
+      "local_drivers": [
+        {
+          "driver": "high construction activity proxy",
+          "value": 0.9345655537991636,
+          "interpretation": "Construction activity can contribute coarse particulate dust."
+        },
+        {
+          "driver": "high industrial proximity score",
+          "value": 0.7911735765809211,
+          "interpretation": "Industrial proximity may contribute combustion and fine particulate load."
+        },
+        {
+          "driver": "elevated current PM2.5",
+          "value": 73.66701855797398,
+          "interpretation": "Current fine particulate pollution is already elevated."
+        }
+      ]
+    },
+    {
+      "ward_id": "W08",
+      "ward_name": "Perambur",
+      "local_drivers": [
+        {
+          "driver": "low wind speed",
+          "value": 1.1549072448090674,
+          "interpretation": "Poor dispersion can allow pollutants to accumulate."
+        },
+        {
+          "driver": "dense road network",
+          "value": 0.8018838965650309,
+          "interpretation": "Dense roads increase exposure to traffic emissions and resuspended dust."
+        },
+        {
+          "driver": "high industrial proximity score",
+          "value": 0.7672249602239732,
+          "interpretation": "Industrial proximity may contribute combustion and fine particulate load."
+        }
+      ]
+    },
+    {
+      "ward_id": "W09",
+      "ward_name": "Tambaram",
+      "local_drivers": [
+        {
+          "driver": "combined spatiotemporal signal",
+          "value": null,
+          "interpretation": "Prediction is driven by the combined pattern of weather, location, time, and current pollutant levels."
+        }
+      ]
+    },
+    {
+      "ward_id": "W10",
+      "ward_name": "Royapuram",
+      "local_drivers": [
+        {
+          "driver": "high industrial proximity score",
+          "value": 0.8872479733827977,
+          "interpretation": "Industrial proximity may contribute combustion and fine particulate load."
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    "Permutation importance is a global model explanation method, not causal proof.",
+    "Local driver cards are evidence summaries from observed features.",
+    "Future version can add SHAP values on transformed LightGBM features."
+  ]
+}
