@@ -1,0 +1,16 @@
+pandas
+numpy
+scikit-learn
+lightgbm
+catboost
+xgboost
+matplotlib
+geopandas
+shapely
+pyproj
+rtree
+requests
+python-dotenv
+tqdm
+joblib
+shap
