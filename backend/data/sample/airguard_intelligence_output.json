@@ -1,0 +1,635 @@
+{
+  "project": "AirGuard AI",
+  "city": "Chennai",
+  "generated_at": "2026-06-29T10:15:00.884092",
+  "output_type": "combined_ml_intelligence",
+  "description": "Integration-ready ML intelligence output combining forecasting, event-risk detection, and probabilistic source attribution.",
+  "models_summary": {
+    "forecasting": {
+      "model_type": "LightGBM regression",
+      "targets": [
+        "PM2.5",
+        "PM10",
+        "AQI"
+      ],
+      "aqi_rmse": 27.99150067618016,
+      "baseline_aqi_rmse": 38.45711054194977,
+      "aqi_rmse_improvement_vs_persistence": 0.2721371865510675,
+      "aqi_category_accuracy": 0.8291958041958042
+    },
+    "event_risk": {
+      "model_type": "LightGBM binary classifier",
+      "event_definition": "AQI >= 201 within 24h",
+      "precision": 0.14276568501920614,
+      "recall": 0.6211699164345403,
+      "f1": 0.23217074440395627,
+      "roc_auc": 0.7573504922324079,
+      "chosen_threshold": 0.32999999999999996
+    },
+    "source_attribution": {
+      "model_type": "LightGBM multiclass classifier",
+      "classes": [
+        "construction",
+        "industrial",
+        "meteorology",
+        "road_dust",
+        "traffic",
+        "waste_burning"
+      ],
+      "accuracy": 0.7741258741258741,
+      "macro_f1": 0.5550362349256635,
+      "weighted_f1": 0.7818226233594048
+    }
+  },
+  "wards": [
+    {
+      "ward_id": "W02",
+      "ward_name": "Guindy",
+      "lat": 13.0108,
+      "lon": 80.2206,
+      "forecast": {
+        "horizon_hours": 24,
+        "current_pm25": 76.58418258446572,
+        "forecast_pm25": 73.64244940452426,
+        "forecast_pm25_p10": 64.79687360726723,
+        "forecast_pm25_p90": 82.48802520178128,
+        "current_aqi": 168.4852016858246,
+        "forecast_aqi": 171.01828967425544,
+        "risk_level": "Moderate",
+        "model_confidence": 0.8272348477098237
+      },
+      "event_risk": {
+        "event_definition": "AQI >= 201 within 24h",
+        "event_threshold_aqi": 201,
+        "high_pollution_probability_24h": 0.7050928783761002,
+        "high_pollution_event_predicted": true
+      },
+      "source_attribution": {
+        "dominant_sources": [
+          {
+            "source": "waste burning / thermal anomaly",
+            "source_key": "waste_burning",
+            "probability": 0.8690774046186702,
+            "evidence": [
+              "night-time burning-prone window",
+              "sharp fine-particle elevation"
+            ]
+          },
+          {
+            "source": "road dust / resuspension",
+            "source_key": "road_dust",
+            "probability": 0.12587691094824924,
+            "evidence": [
+              "dense road network exposure",
+              "PM10-heavy particulate pattern",
+              "low green-cover buffering"
+            ]
+          },
+          {
+            "source": "meteorological trapping",
+            "source_key": "meteorology",
+            "probability": 0.005028895410986751,
+            "evidence": [
+              "model probability supported by combined spatiotemporal feature pattern"
+            ]
+          }
+        ],
+        "attribution_confidence": "high",
+        "causal_warning": "Probabilistic attribution, not direct causal proof."
+      },
+      "priority": {
+        "priority_score": 0.6021,
+        "priority_band": "High",
+        "priority_reason": "Computed from forecast AQI, high-pollution event probability, model confidence, and placeholder population vulnerability."
+      }
+    },
+    {
+      "ward_id": "W10",
+      "ward_name": "Royapuram",
+      "lat": 13.1137,
+      "lon": 80.2954,
+      "forecast": {
+        "horizon_hours": 24,
+        "current_pm25": 62.35532122273478,
+        "forecast_pm25": 64.0626683762007,
+        "forecast_pm25_p10": 56.10166357317189,
+        "forecast_pm25_p90": 72.02367317922952,
+        "current_aqi": 137.18170669001654,
+        "forecast_aqi": 142.95142444388915,
+        "risk_level": "Moderate",
+        "model_confidence": 0.8445116249408435
+      },
+      "event_risk": {
+        "event_definition": "AQI >= 201 within 24h",
+        "event_threshold_aqi": 201,
+        "high_pollution_probability_24h": 0.4878976540716733,
+        "high_pollution_event_predicted": true
+      },
+      "source_attribution": {
+        "dominant_sources": [
+          {
+            "source": "road dust / resuspension",
+            "source_key": "road_dust",
+            "probability": 0.7446528561921226,
+            "evidence": [
+              "PM10-heavy particulate pattern",
+              "low green-cover buffering"
+            ]
+          },
+          {
+            "source": "waste burning / thermal anomaly",
+            "source_key": "waste_burning",
+            "probability": 0.2083828341631994,
+            "evidence": [
+              "night-time burning-prone window"
+            ]
+          },
+          {
+            "source": "meteorological trapping",
+            "source_key": "meteorology",
+            "probability": 0.042636093594230526,
+            "evidence": [
+              "model probability supported by combined spatiotemporal feature pattern"
+            ]
+          }
+        ],
+        "attribution_confidence": "high",
+        "causal_warning": "Probabilistic attribution, not direct causal proof."
+      },
+      "priority": {
+        "priority_score": 0.4959,
+        "priority_band": "Medium",
+        "priority_reason": "Computed from forecast AQI, high-pollution event probability, model confidence, and placeholder population vulnerability."
+      }
+    },
+    {
+      "ward_id": "W08",
+      "ward_name": "Perambur",
+      "lat": 13.121,
+      "lon": 80.2326,
+      "forecast": {
+        "horizon_hours": 24,
+        "current_pm25": 60.63118183345368,
+        "forecast_pm25": 58.621406214589115,
+        "forecast_pm25_p10": 50.7028115208249,
+        "forecast_pm25_p90": 66.54000090835332,
+        "current_aqi": 133.3886000335981,
+        "forecast_aqi": 130.47650182664745,
+        "risk_level": "Moderate",
+        "model_confidence": 0.8453399473874177
+      },
+      "event_risk": {
+        "event_definition": "AQI >= 201 within 24h",
+        "event_threshold_aqi": 201,
+        "high_pollution_probability_24h": 0.47859456026532804,
+        "high_pollution_event_predicted": true
+      },
+      "source_attribution": {
+        "dominant_sources": [
+          {
+            "source": "waste burning / thermal anomaly",
+            "source_key": "waste_burning",
+            "probability": 0.6029242322863819,
+            "evidence": [
+              "night-time burning-prone window"
+            ]
+          },
+          {
+            "source": "road dust / resuspension",
+            "source_key": "road_dust",
+            "probability": 0.3825687551294687,
+            "evidence": [
+              "dense road network exposure",
+              "PM10-heavy particulate pattern"
+            ]
+          },
+          {
+            "source": "meteorological trapping",
+            "source_key": "meteorology",
+            "probability": 0.013728967744851227,
+            "evidence": [
+              "model probability supported by combined spatiotemporal feature pattern"
+            ]
+          }
+        ],
+        "attribution_confidence": "medium-high",
+        "causal_warning": "Probabilistic attribution, not direct causal proof."
+      },
+      "priority": {
+        "priority_score": 0.4782,
+        "priority_band": "Medium",
+        "priority_reason": "Computed from forecast AQI, high-pollution event probability, model confidence, and placeholder population vulnerability."
+      }
+    },
+    {
+      "ward_id": "W07",
+      "ward_name": "Porur",
+      "lat": 13.0382,
+      "lon": 80.1565,
+      "forecast": {
+        "horizon_hours": 24,
+        "current_pm25": 73.66701855797398,
+        "forecast_pm25": 70.65941884626267,
+        "forecast_pm25_p10": 62.152302906056306,
+        "forecast_pm25_p90": 79.16653478646903,
+        "current_aqi": 162.06744082754275,
+        "forecast_aqi": 154.67097051313488,
+        "risk_level": "Moderate",
+        "model_confidence": 0.8338453917928446
+      },
+      "event_risk": {
+        "event_definition": "AQI >= 201 within 24h",
+        "event_threshold_aqi": 201,
+        "high_pollution_probability_24h": 0.35095314537934086,
+        "high_pollution_event_predicted": true
+      },
+      "source_attribution": {
+        "dominant_sources": [
+          {
+            "source": "construction dust",
+            "source_key": "construction",
+            "probability": 0.9926461635397584,
+            "evidence": [
+              "high construction activity proxy",
+              "coarse particle signature"
+            ]
+          },
+          {
+            "source": "waste burning / thermal anomaly",
+            "source_key": "waste_burning",
+            "probability": 0.006763531260447383,
+            "evidence": [
+              "night-time burning-prone window"
+            ]
+          },
+          {
+            "source": "meteorological trapping",
+            "source_key": "meteorology",
+            "probability": 0.00042378020321517533,
+            "evidence": [
+              "model probability supported by combined spatiotemporal feature pattern"
+            ]
+          }
+        ],
+        "attribution_confidence": "high",
+        "causal_warning": "Probabilistic attribution, not direct causal proof."
+      },
+      "priority": {
+        "priority_score": 0.46,
+        "priority_band": "Medium",
+        "priority_reason": "Computed from forecast AQI, high-pollution event probability, model confidence, and placeholder population vulnerability."
+      }
+    },
+    {
+      "ward_id": "W03",
+      "ward_name": "Manali",
+      "lat": 13.1667,
+      "lon": 80.2667,
+      "forecast": {
+        "horizon_hours": 24,
+        "current_pm25": 59.866442162385674,
+        "forecast_pm25": 61.959557117138594,
+        "forecast_pm25_p10": 53.2848285787234,
+        "forecast_pm25_p90": 70.63428565555378,
+        "current_aqi": 131.70617275724848,
+        "forecast_aqi": 132.44677268969292,
+        "risk_level": "Moderate",
+        "model_confidence": 0.8305717082340782
+      },
+      "event_risk": {
+        "event_definition": "AQI >= 201 within 24h",
+        "event_threshold_aqi": 201,
+        "high_pollution_probability_24h": 0.22648416239476332,
+        "high_pollution_event_predicted": false
+      },
+      "source_attribution": {
+        "dominant_sources": [
+          {
+            "source": "road dust / resuspension",
+            "source_key": "road_dust",
+            "probability": 0.6644523199215924,
+            "evidence": [
+              "dense road network exposure"
+            ]
+          },
+          {
+            "source": "waste burning / thermal anomaly",
+            "source_key": "waste_burning",
+            "probability": 0.2742695371241665,
+            "evidence": [
+              "night-time burning-prone window"
+            ]
+          },
+          {
+            "source": "meteorological trapping",
+            "source_key": "meteorology",
+            "probability": 0.06057248861661009,
+            "evidence": [
+              "high humidity supports pollutant accumulation"
+            ]
+          }
+        ],
+        "attribution_confidence": "medium-high",
+        "causal_warning": "Probabilistic attribution, not direct causal proof."
+      },
+      "priority": {
+        "priority_score": 0.39,
+        "priority_band": "Medium",
+        "priority_reason": "Computed from forecast AQI, high-pollution event probability, model confidence, and placeholder population vulnerability."
+      }
+    },
+    {
+      "ward_id": "W09",
+      "ward_name": "Tambaram",
+      "lat": 12.9249,
+      "lon": 80.1,
+      "forecast": {
+        "horizon_hours": 24,
+        "current_pm25": 50.13441256935008,
+        "forecast_pm25": 51.10061403362426,
+        "forecast_pm25_p10": 43.34578837657448,
+        "forecast_pm25_p90": 58.85543969067404,
+        "current_aqi": 110.94711818404404,
+        "forecast_aqi": 120.79889216824171,
+        "risk_level": "Moderate",
+        "model_confidence": 0.8485385613857466
+      },
+      "event_risk": {
+        "event_definition": "AQI >= 201 within 24h",
+        "event_threshold_aqi": 201,
+        "high_pollution_probability_24h": 0.16844508637799432,
+        "high_pollution_event_predicted": false
+      },
+      "source_attribution": {
+        "dominant_sources": [
+          {
+            "source": "waste burning / thermal anomaly",
+            "source_key": "waste_burning",
+            "probability": 0.5793059784064681,
+            "evidence": [
+              "night-time burning-prone window"
+            ]
+          },
+          {
+            "source": "road dust / resuspension",
+            "source_key": "road_dust",
+            "probability": 0.4076248808189936,
+            "evidence": [
+              "PM10-heavy particulate pattern"
+            ]
+          },
+          {
+            "source": "meteorological trapping",
+            "source_key": "meteorology",
+            "probability": 0.01303475823812505,
+            "evidence": [
+              "model probability supported by combined spatiotemporal feature pattern"
+            ]
+          }
+        ],
+        "attribution_confidence": "medium-high",
+        "causal_warning": "Probabilistic attribution, not direct causal proof."
+      },
+      "priority": {
+        "priority_score": 0.3588,
+        "priority_band": "Medium",
+        "priority_reason": "Computed from forecast AQI, high-pollution event probability, model confidence, and placeholder population vulnerability."
+      }
+    },
+    {
+      "ward_id": "W05",
+      "ward_name": "Anna Nagar",
+      "lat": 13.085,
+      "lon": 80.2101,
+      "forecast": {
+        "horizon_hours": 24,
+        "current_pm25": 47.878521190268074,
+        "forecast_pm25": 53.70361463510158,
+        "forecast_pm25_p10": 46.132586439613696,
+        "forecast_pm25_p90": 61.274642830589464,
+        "current_aqi": 112.10237666827445,
+        "forecast_aqi": 132.89808280660037,
+        "risk_level": "Moderate",
+        "model_confidence": 0.8521283555568773
+      },
+      "event_risk": {
+        "event_definition": "AQI >= 201 within 24h",
+        "event_threshold_aqi": 201,
+        "high_pollution_probability_24h": 0.12118635319969684,
+        "high_pollution_event_predicted": false
+      },
+      "source_attribution": {
+        "dominant_sources": [
+          {
+            "source": "waste burning / thermal anomaly",
+            "source_key": "waste_burning",
+            "probability": 0.5988077856596599,
+            "evidence": [
+              "night-time burning-prone window"
+            ]
+          },
+          {
+            "source": "road dust / resuspension",
+            "source_key": "road_dust",
+            "probability": 0.3810776101726263,
+            "evidence": [
+              "dense road network exposure",
+              "PM10-heavy particulate pattern"
+            ]
+          },
+          {
+            "source": "meteorological trapping",
+            "source_key": "meteorology",
+            "probability": 0.020106737418426262,
+            "evidence": [
+              "model probability supported by combined spatiotemporal feature pattern"
+            ]
+          }
+        ],
+        "attribution_confidence": "medium-high",
+        "causal_warning": "Probabilistic attribution, not direct causal proof."
+      },
+      "priority": {
+        "priority_score": 0.3569,
+        "priority_band": "Medium",
+        "priority_reason": "Computed from forecast AQI, high-pollution event probability, model confidence, and placeholder population vulnerability."
+      }
+    },
+    {
+      "ward_id": "W01",
+      "ward_name": "T Nagar",
+      "lat": 13.0418,
+      "lon": 80.2341,
+      "forecast": {
+        "horizon_hours": 24,
+        "current_pm25": 54.50992648895615,
+        "forecast_pm25": 56.89823002746326,
+        "forecast_pm25_p10": 49.09441153965622,
+        "forecast_pm25_p90": 64.7020485152703,
+        "current_aqi": 119.92183827570354,
+        "forecast_aqi": 133.26366282781623,
+        "risk_level": "Moderate",
+        "model_confidence": 0.8475816701600187
+      },
+      "event_risk": {
+        "event_definition": "AQI >= 201 within 24h",
+        "event_threshold_aqi": 201,
+        "high_pollution_probability_24h": 0.09068661618427136,
+        "high_pollution_event_predicted": false
+      },
+      "source_attribution": {
+        "dominant_sources": [
+          {
+            "source": "road dust / resuspension",
+            "source_key": "road_dust",
+            "probability": 0.9361034195453011,
+            "evidence": [
+              "dense road network exposure",
+              "PM10-heavy particulate pattern"
+            ]
+          },
+          {
+            "source": "meteorological trapping",
+            "source_key": "meteorology",
+            "probability": 0.043252697185218625,
+            "evidence": [
+              "high humidity supports pollutant accumulation"
+            ]
+          },
+          {
+            "source": "waste burning / thermal anomaly",
+            "source_key": "waste_burning",
+            "probability": 0.02003634743663914,
+            "evidence": [
+              "night-time burning-prone window"
+            ]
+          }
+        ],
+        "attribution_confidence": "high",
+        "causal_warning": "Probabilistic attribution, not direct causal proof."
+      },
+      "priority": {
+        "priority_score": 0.346,
+        "priority_band": "Low",
+        "priority_reason": "Computed from forecast AQI, high-pollution event probability, model confidence, and placeholder population vulnerability."
+      }
+    },
+    {
+      "ward_id": "W06",
+      "ward_name": "Adyar",
+      "lat": 13.0067,
+      "lon": 80.2578,
+      "forecast": {
+        "horizon_hours": 24,
+        "current_pm25": 52.60073062581163,
+        "forecast_pm25": 56.22984588416077,
+        "forecast_pm25_p10": 47.71540157068746,
+        "forecast_pm25_p90": 64.74429019763407,
+        "current_aqi": 115.7216073767856,
+        "forecast_aqi": 122.42907450264309,
+        "risk_level": "Moderate",
+        "model_confidence": 0.8337022595024745
+      },
+      "event_risk": {
+        "event_definition": "AQI >= 201 within 24h",
+        "event_threshold_aqi": 201,
+        "high_pollution_probability_24h": 0.03407556099243302,
+        "high_pollution_event_predicted": false
+      },
+      "source_attribution": {
+        "dominant_sources": [
+          {
+            "source": "road dust / resuspension",
+            "source_key": "road_dust",
+            "probability": 0.5826040075382307,
+            "evidence": [
+              "PM10-heavy particulate pattern",
+              "low green-cover buffering"
+            ]
+          },
+          {
+            "source": "waste burning / thermal anomaly",
+            "source_key": "waste_burning",
+            "probability": 0.37976937222153856,
+            "evidence": [
+              "night-time burning-prone window"
+            ]
+          },
+          {
+            "source": "meteorological trapping",
+            "source_key": "meteorology",
+            "probability": 0.037588854807042035,
+            "evidence": [
+              "model probability supported by combined spatiotemporal feature pattern"
+            ]
+          }
+        ],
+        "attribution_confidence": "medium-high",
+        "causal_warning": "Probabilistic attribution, not direct causal proof."
+      },
+      "priority": {
+        "priority_score": 0.3115,
+        "priority_band": "Low",
+        "priority_reason": "Computed from forecast AQI, high-pollution event probability, model confidence, and placeholder population vulnerability."
+      }
+    },
+    {
+      "ward_id": "W04",
+      "ward_name": "Velachery",
+      "lat": 12.9755,
+      "lon": 80.2207,
+      "forecast": {
+        "horizon_hours": 24,
+        "current_pm25": 32.56578315499201,
+        "forecast_pm25": 37.18294008551659,
+        "forecast_pm25_p10": 28.440702867985024,
+        "forecast_pm25_p90": 45.92517730304816,
+        "current_aqi": 71.64472294098243,
+        "forecast_aqi": 84.19864092487741,
+        "risk_level": "Satisfactory",
+        "model_confidence": 0.8292531793450866
+      },
+      "event_risk": {
+        "event_definition": "AQI >= 201 within 24h",
+        "event_threshold_aqi": 201,
+        "high_pollution_probability_24h": 0.0024952905037518543,
+        "high_pollution_event_predicted": false
+      },
+      "source_attribution": {
+        "dominant_sources": [
+          {
+            "source": "road dust / resuspension",
+            "source_key": "road_dust",
+            "probability": 0.9056873578581113,
+            "evidence": [
+              "PM10-heavy particulate pattern"
+            ]
+          },
+          {
+            "source": "waste burning / thermal anomaly",
+            "source_key": "waste_burning",
+            "probability": 0.05967115932985683,
+            "evidence": [
+              "night-time burning-prone window"
+            ]
+          },
+          {
+            "source": "meteorological trapping",
+            "source_key": "meteorology",
+            "probability": 0.03459295526716393,
+            "evidence": [
+              "model probability supported by combined spatiotemporal feature pattern"
+            ]
+          }
+        ],
+        "attribution_confidence": "high",
+        "causal_warning": "Probabilistic attribution, not direct causal proof."
+      },
+      "priority": {
+        "priority_score": 0.2552,
+        "priority_band": "Low",
+        "priority_reason": "Computed from forecast AQI, high-pollution event probability, model confidence, and placeholder population vulnerability."
+      }
+    }
+  ]
+}
