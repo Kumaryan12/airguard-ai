@@ -1,0 +1,139 @@
+{
+  "city": "Chennai",
+  "station_location_id": 2586,
+  "model_type": "cpcb_window_event_classifier",
+  "target": "cpcb_window_preventive_risk_event_24h",
+  "event_definition": "cpcb_window_aqi_target_24h >= 76 OR 24h AQI increase >= 15",
+  "train_rows": 1396,
+  "test_rows": 466,
+  "feature_count": 224,
+  "event_rate_overall": 0.14446831364124596,
+  "event_rate_train": 0.09025787965616046,
+  "event_rate_test": 0.30686695278969955,
+  "date_range": {
+    "train_start": "2026-04-01 03:30:00+00:00",
+    "train_end": "2026-06-05 02:30:00+00:00",
+    "test_start": "2026-06-05 03:30:00+00:00",
+    "test_end": "2026-06-28 09:30:00+00:00"
+  },
+  "results": {
+    "persistence_current_event": {
+      "accuracy": 0.6502145922746781,
+      "precision": 0.41379310344827586,
+      "recall": 0.3356643356643357,
+      "f1": 0.37065637065637064,
+      "roc_auc": 0.6712528957111001,
+      "average_precision": 0.4709934102864899,
+      "confusion_matrix": {
+        "tn": 255,
+        "fp": 68,
+        "fn": 95,
+        "tp": 48
+      },
+      "positive_rate_predicted": 0.24892703862660945,
+      "type": "baseline"
+    },
+    "seasonal_24h_lag_event": {
+      "accuracy": 0.6502145922746781,
+      "precision": 0.41379310344827586,
+      "recall": 0.3356643356643357,
+      "f1": 0.37065637065637064,
+      "roc_auc": 0.7094438069670268,
+      "average_precision": 0.40836308031914736,
+      "confusion_matrix": {
+        "tn": 255,
+        "fp": 68,
+        "fn": 95,
+        "tp": 48
+      },
+      "positive_rate_predicted": 0.24892703862660945,
+      "type": "baseline"
+    },
+    "rolling_mean_24h_event": {
+      "accuracy": 0.6502145922746781,
+      "precision": 0.41379310344827586,
+      "recall": 0.3356643356643357,
+      "f1": 0.37065637065637064,
+      "roc_auc": 0.6900777241334517,
+      "average_precision": 0.4258505778055799,
+      "confusion_matrix": {
+        "tn": 255,
+        "fp": 68,
+        "fn": 95,
+        "tp": 48
+      },
+      "positive_rate_predicted": 0.24892703862660945,
+      "type": "baseline"
+    },
+    "logistic_regression": {
+      "accuracy": 0.6866952789699571,
+      "precision": 0.47058823529411764,
+      "recall": 0.16783216783216784,
+      "f1": 0.24742268041237114,
+      "roc_auc": 0.49682824915023055,
+      "average_precision": 0.3675021984286451,
+      "confusion_matrix": {
+        "tn": 296,
+        "fp": 27,
+        "fn": 119,
+        "tp": 24
+      },
+      "positive_rate_predicted": 0.10944206008583691,
+      "type": "learned_model"
+    },
+    "extra_trees_classifier": {
+      "accuracy": 0.6158798283261803,
+      "precision": 0.09090909090909091,
+      "recall": 0.027972027972027972,
+      "f1": 0.0427807486631016,
+      "roc_auc": 0.2840503150100673,
+      "average_precision": 0.22357672068338239,
+      "confusion_matrix": {
+        "tn": 283,
+        "fp": 40,
+        "fn": 139,
+        "tp": 4
+      },
+      "positive_rate_predicted": 0.0944206008583691,
+      "type": "learned_model"
+    },
+    "random_forest_classifier": {
+      "accuracy": 0.6738197424892703,
+      "precision": 0.32,
+      "recall": 0.055944055944055944,
+      "f1": 0.09523809523809523,
+      "roc_auc": 0.4356665006819806,
+      "average_precision": 0.298189493029478,
+      "confusion_matrix": {
+        "tn": 306,
+        "fp": 17,
+        "fn": 135,
+        "tp": 8
+      },
+      "positive_rate_predicted": 0.0536480686695279,
+      "type": "learned_model"
+    },
+    "lightgbm_classifier": {
+      "accuracy": 0.6695278969957081,
+      "precision": 0.3103448275862069,
+      "recall": 0.06293706293706294,
+      "f1": 0.10465116279069768,
+      "roc_auc": 0.3830349217346121,
+      "average_precision": 0.2787976464481523,
+      "confusion_matrix": {
+        "tn": 303,
+        "fp": 20,
+        "fn": 134,
+        "tp": 9
+      },
+      "positive_rate_predicted": 0.06223175965665236,
+      "type": "learned_model"
+    }
+  },
+  "best_learned_model": "logistic_regression",
+  "best_baseline": "persistence_current_event",
+  "best_overall": "persistence_current_event",
+  "selection_metric": "f1",
+  "important_warning": "This is an event-risk classifier for CPCB-window AQI crossing Moderately Polluted threshold in 24 hours. It is trained on one station, so results validate the prototype pipeline rather than citywide deployment.",
+  "generated_at": "2026-06-29T18:39:44.020973Z"
+}
