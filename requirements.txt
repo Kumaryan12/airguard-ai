@@ -18,3 +18,5 @@ osmnx
 networkx
 openai
 groq
+fastapi
+uvicorn
