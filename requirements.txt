@@ -16,3 +16,5 @@ joblib
 shap
 osmnx
 networkx
+openai
+groq
