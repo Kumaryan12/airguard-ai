@@ -216,3 +216,50 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.venv/
+venv/
+env/
+
+# Environment files
+.env
+.env.local
+
+# Data
+ml/data/raw/*
+ml/data/processed/*
+!ml/data/raw/.gitkeep
+!ml/data/processed/.gitkeep
+
+# Model artifacts
+ml/artifacts/*
+!ml/artifacts/.gitkeep
+
+# Notebooks checkpoints
+.ipynb_checkpoints/
+
+# OS files
+.DS_Store
+
+# Logs
+*.log
+
+# Node / frontend
+node_modules/
+.next/
+dist/
+build/
+
+# Large files
+*.csv
+*.parquet
+*.pkl
+*.joblib
+*.h5
+*.pt
+*.pth
+*.onnx
