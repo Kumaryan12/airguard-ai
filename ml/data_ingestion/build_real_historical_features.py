@@ -321,12 +321,23 @@ def add_targets(df: pd.DataFrame) -> pd.DataFrame:
             df["cpcb_aqi_target_24h"] >= 101
         ).astype(int)
     
+    if "cpcb_window_aqi_target_24h" in df.columns and "cpcb_window_aqi" in df.columns:
+        df["cpcb_window_aqi_delta_target_24h"] = (
+            df["cpcb_window_aqi_target_24h"] - df["cpcb_window_aqi"]
+        )
+
+        df["cpcb_window_preventive_risk_event_24h"] = (
+            (df["cpcb_window_aqi_target_24h"] >= 76)
+            | (df["cpcb_window_aqi_delta_target_24h"] >= 15)
+        ).astype(int)
+    
     if "cpcb_window_aqi_target_24h" in df.columns:
         df["cpcb_window_high_pollution_event_24h"] = (
             df["cpcb_window_aqi_target_24h"] >= 101
         ).astype(int)
 
     return df
+
 
 
 def attach_osm_features(df: pd.DataFrame) -> pd.DataFrame:

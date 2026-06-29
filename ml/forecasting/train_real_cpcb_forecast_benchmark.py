@@ -22,19 +22,19 @@ from ml.config import ARTIFACTS_DIR, PROCESSED_DATA_DIR, PROJECT_ROOT
 
 
 INPUT_PATH = PROCESSED_DATA_DIR / "chennai_real_historical_features.csv"
-METRICS_PATH = ARTIFACTS_DIR / "real_cpcb_window_forecast_benchmark_metrics.json"
-PREDICTIONS_PATH = ARTIFACTS_DIR / "real_cpcb_window_forecast_test_predictions.csv"
-MODEL_PATH = ARTIFACTS_DIR / "real_cpcb_window_forecast_best_model.joblib"
+METRICS_PATH = ARTIFACTS_DIR / "real_cpcb_forecast_benchmark_metrics.json"
+PREDICTIONS_PATH = ARTIFACTS_DIR / "real_cpcb_forecast_test_predictions.csv"
+MODEL_PATH = ARTIFACTS_DIR / "real_cpcb_forecast_best_model.joblib"
 
 BACKEND_OUTPUT_PATH = (
     PROJECT_ROOT
     / "backend"
     / "data"
     / "sample"
-    / "real_cpcb_window_forecast_benchmark_metrics.json"
+    / "real_cpcb_forecast_benchmark_metrics.json"
 )
 
-TARGET_COL = "cpcb_window_aqi_target_24h"
+TARGET_COL = "cpcb_aqi_target_24h"
 
 
 EXCLUDE_COLUMNS = {
@@ -52,10 +52,6 @@ EXCLUDE_COLUMNS = {
     "pm10_sub_index_target_24h",
     "pm25_sub_index_target_24h",
     "cpcb_high_pollution_event_24h",
-    "cpcb_window_aqi_target_24h",
-"pm10_window_sub_index_target_24h",
-"pm25_window_sub_index_target_24h",
-"cpcb_window_high_pollution_event_24h",
 }
 
 
@@ -108,13 +104,8 @@ def select_numeric_features(df: pd.DataFrame) -> List[str]:
         if not col.endswith("_target_24h")
     ]
 
-    features = [
-        col
-        for col in features
-        if df[col].notna().sum() > 0
-    ]
-
     return features
+
 
 def temporal_train_test_split(
     df: pd.DataFrame,
@@ -199,15 +190,15 @@ def evaluate_baselines(test_df: pd.DataFrame) -> Dict[str, Dict[str, Any]]:
 
     baselines = {}
 
-    if "cpcb_window_aqi" in test_df.columns:
-        pred = test_df["cpcb_window_aqi"].values
-        baselines["persistence_current_cpcb_window_aqi"] = {
+    if "cpcb_aqi" in test_df.columns:
+        pred = test_df["cpcb_aqi"].values
+        baselines["persistence_current_cpcb_aqi"] = {
             **regression_metrics(y_true, pred),
             "type": "baseline",
         }
 
-    if "cpcb_window_aqi_lag_24h" in test_df.columns:
-        pred = test_df["cpcb_window_aqi_lag_24h"].values
+    if "cpcb_aqi_lag_24h" in test_df.columns:
+        pred = test_df["cpcb_aqi_lag_24h"].values
         mask = ~pd.isna(pred)
 
         if mask.sum() > 0:
@@ -216,8 +207,8 @@ def evaluate_baselines(test_df: pd.DataFrame) -> Dict[str, Dict[str, Any]]:
                 "type": "baseline",
             }
 
-    if "cpcb_window_aqi_rolling_mean_24h" in test_df.columns:
-        pred = test_df["cpcb_window_aqi_rolling_mean_24h"].values
+    if "cpcb_aqi_rolling_mean_24h" in test_df.columns:
+        pred = test_df["cpcb_aqi_rolling_mean_24h"].values
         mask = ~pd.isna(pred)
 
         if mask.sum() > 0:
@@ -227,6 +218,8 @@ def evaluate_baselines(test_df: pd.DataFrame) -> Dict[str, Dict[str, Any]]:
             }
 
     return baselines
+
+
 def main() -> None:
     if not INPUT_PATH.exists():
         raise FileNotFoundError(
@@ -325,7 +318,7 @@ def main() -> None:
         "station_location_id": int(df["location_id"].iloc[0])
         if "location_id" in df.columns
         else None,
-        "model_type": "real_cpcb_window_forecast_benchmark",
+        "model_type": "real_cpcb_forecast_benchmark",
         "target": TARGET_COL,
         "train_rows": int(len(train_df)),
         "test_rows": int(len(test_df)),
@@ -341,9 +334,8 @@ def main() -> None:
         "best_baseline": best_baseline,
         "best_overall": best_overall,
         "important_warning": (
-            "CPCB window AQI target uses pollutant-specific rolling averaging windows "
-            "from available station data: 24h for PM2.5/PM10/NO2/SO2 and 8h for CO/O3. "
-            "This is closer to CPCB logic, but still depends on available OpenAQ sensor coverage."
+            "CPCB AQI target is computed from available latest pollutant values. "
+            "For final regulatory AQI, pollutant-specific CPCB averaging windows should be used."
         ),
         "generated_at": datetime.utcnow().isoformat() + "Z",
     }
@@ -362,7 +354,7 @@ def main() -> None:
         [
             "timestamp",
             "location_id",
-            "cpcb_window_aqi",
+            "cpcb_aqi",
             TARGET_COL,
         ]
     ].copy()

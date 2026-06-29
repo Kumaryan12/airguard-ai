@@ -1,40 +1,48 @@
 import json
 from datetime import datetime
-from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
 import joblib
 import numpy as np
 import pandas as pd
-from sklearn.ensemble import ExtraTreesRegressor, RandomForestRegressor
+from sklearn.ensemble import ExtraTreesClassifier, RandomForestClassifier
 from sklearn.impute import SimpleImputer
-from sklearn.linear_model import Ridge
-from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import (
+    accuracy_score,
+    average_precision_score,
+    confusion_matrix,
+    f1_score,
+    precision_score,
+    recall_score,
+    roc_auc_score,
+)
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
 try:
-    from lightgbm import LGBMRegressor
+    from lightgbm import LGBMClassifier
 except Exception:
-    LGBMRegressor = None
+    LGBMClassifier = None
 
 from ml.config import ARTIFACTS_DIR, PROCESSED_DATA_DIR, PROJECT_ROOT
 
 
 INPUT_PATH = PROCESSED_DATA_DIR / "chennai_real_historical_features.csv"
-METRICS_PATH = ARTIFACTS_DIR / "real_cpcb_window_forecast_benchmark_metrics.json"
-PREDICTIONS_PATH = ARTIFACTS_DIR / "real_cpcb_window_forecast_test_predictions.csv"
-MODEL_PATH = ARTIFACTS_DIR / "real_cpcb_window_forecast_best_model.joblib"
+
+METRICS_PATH = ARTIFACTS_DIR / "cpcb_event_classifier_metrics.json"
+PREDICTIONS_PATH = ARTIFACTS_DIR / "cpcb_event_classifier_test_predictions.csv"
+MODEL_PATH = ARTIFACTS_DIR / "cpcb_event_classifier_best_model.joblib"
 
 BACKEND_OUTPUT_PATH = (
     PROJECT_ROOT
     / "backend"
     / "data"
     / "sample"
-    / "real_cpcb_window_forecast_benchmark_metrics.json"
+    / "cpcb_event_classifier_metrics.json"
 )
 
-TARGET_COL = "cpcb_window_aqi_target_24h"
+TARGET_COL = "cpcb_window_preventive_risk_event_24h"
 
 
 EXCLUDE_COLUMNS = {
@@ -42,7 +50,9 @@ EXCLUDE_COLUMNS = {
     "location_id",
     "estimated_aqi_category",
     "cpcb_aqi_category",
+    "cpcb_window_aqi_category",
     "dominant_pollutant",
+    "cpcb_window_dominant_pollutant",
     "dispersion_risk",
     "pm25_target_24h",
     "pm10_target_24h",
@@ -53,44 +63,12 @@ EXCLUDE_COLUMNS = {
     "pm25_sub_index_target_24h",
     "cpcb_high_pollution_event_24h",
     "cpcb_window_aqi_target_24h",
-"pm10_window_sub_index_target_24h",
-"pm25_window_sub_index_target_24h",
-"cpcb_window_high_pollution_event_24h",
+    "pm10_window_sub_index_target_24h",
+    "pm25_window_sub_index_target_24h",
+    "cpcb_window_high_pollution_event_24h",
+    "cpcb_window_preventive_risk_event_24h",
+"cpcb_window_aqi_delta_target_24h",
 }
-
-
-def get_aqi_category(aqi: float) -> str:
-    if pd.isna(aqi):
-        return "Unknown"
-    if aqi <= 50:
-        return "Good"
-    if aqi <= 100:
-        return "Satisfactory"
-    if aqi <= 200:
-        return "Moderately Polluted"
-    if aqi <= 300:
-        return "Poor"
-    if aqi <= 400:
-        return "Very Poor"
-    return "Severe"
-
-
-def regression_metrics(y_true, y_pred) -> Dict[str, float]:
-    mae = mean_absolute_error(y_true, y_pred)
-    mse = mean_squared_error(y_true, y_pred)
-    rmse = float(np.sqrt(mse))
-    r2 = r2_score(y_true, y_pred)
-
-    true_cat = [get_aqi_category(x) for x in y_true]
-    pred_cat = [get_aqi_category(x) for x in y_pred]
-    category_accuracy = float(np.mean(np.array(true_cat) == np.array(pred_cat)))
-
-    return {
-        "mae": float(mae),
-        "rmse": float(rmse),
-        "r2": float(r2),
-        "aqi_category_accuracy": category_accuracy,
-    }
 
 
 def select_numeric_features(df: pd.DataFrame) -> List[str]:
@@ -116,6 +94,7 @@ def select_numeric_features(df: pd.DataFrame) -> List[str]:
 
     return features
 
+
 def temporal_train_test_split(
     df: pd.DataFrame,
     test_fraction: float = 0.25,
@@ -129,39 +108,82 @@ def temporal_train_test_split(
     return train_df, test_df
 
 
+def safe_auc(y_true, y_score) -> float | None:
+    if len(np.unique(y_true)) < 2:
+        return None
+
+    return float(roc_auc_score(y_true, y_score))
+
+
+def safe_average_precision(y_true, y_score) -> float | None:
+    if len(np.unique(y_true)) < 2:
+        return None
+
+    return float(average_precision_score(y_true, y_score))
+
+
+def classifier_metrics(y_true, y_pred, y_score) -> Dict[str, Any]:
+    cm = confusion_matrix(y_true, y_pred, labels=[0, 1])
+
+    return {
+        "accuracy": float(accuracy_score(y_true, y_pred)),
+        "precision": float(precision_score(y_true, y_pred, zero_division=0)),
+        "recall": float(recall_score(y_true, y_pred, zero_division=0)),
+        "f1": float(f1_score(y_true, y_pred, zero_division=0)),
+        "roc_auc": safe_auc(y_true, y_score),
+        "average_precision": safe_average_precision(y_true, y_score),
+        "confusion_matrix": {
+            "tn": int(cm[0, 0]),
+            "fp": int(cm[0, 1]),
+            "fn": int(cm[1, 0]),
+            "tp": int(cm[1, 1]),
+        },
+        "positive_rate_predicted": float(np.mean(y_pred)),
+    }
+
+
 def build_models(random_state: int = 42) -> Dict[str, Any]:
     models = {
-        "ridge": Pipeline(
+        "logistic_regression": Pipeline(
             steps=[
                 ("imputer", SimpleImputer(strategy="median")),
                 ("scaler", StandardScaler()),
-                ("model", Ridge(alpha=10.0)),
+                (
+                    "model",
+                    LogisticRegression(
+                        class_weight="balanced",
+                        max_iter=2000,
+                        random_state=random_state,
+                    ),
+                ),
             ]
         ),
-        "extra_trees": Pipeline(
+        "extra_trees_classifier": Pipeline(
             steps=[
                 ("imputer", SimpleImputer(strategy="median")),
                 (
                     "model",
-                    ExtraTreesRegressor(
-                        n_estimators=300,
+                    ExtraTreesClassifier(
+                        n_estimators=400,
                         max_depth=8,
-                        min_samples_leaf=8,
+                        min_samples_leaf=6,
+                        class_weight="balanced",
                         random_state=random_state,
                         n_jobs=-1,
                     ),
                 ),
             ]
         ),
-        "random_forest": Pipeline(
+        "random_forest_classifier": Pipeline(
             steps=[
                 ("imputer", SimpleImputer(strategy="median")),
                 (
                     "model",
-                    RandomForestRegressor(
-                        n_estimators=300,
+                    RandomForestClassifier(
+                        n_estimators=400,
                         max_depth=8,
-                        min_samples_leaf=8,
+                        min_samples_leaf=6,
+                        class_weight="balanced",
                         random_state=random_state,
                         n_jobs=-1,
                     ),
@@ -170,20 +192,21 @@ def build_models(random_state: int = 42) -> Dict[str, Any]:
         ),
     }
 
-    if LGBMRegressor is not None:
-        models["lightgbm_conservative"] = Pipeline(
+    if LGBMClassifier is not None:
+        models["lightgbm_classifier"] = Pipeline(
             steps=[
                 ("imputer", SimpleImputer(strategy="median")),
                 (
                     "model",
-                    LGBMRegressor(
-                        n_estimators=200,
+                    LGBMClassifier(
+                        n_estimators=250,
                         learning_rate=0.03,
                         max_depth=4,
                         num_leaves=16,
-                        min_child_samples=30,
+                        min_child_samples=25,
                         subsample=0.8,
                         colsample_bytree=0.8,
+                        class_weight="balanced",
                         random_state=random_state,
                         verbosity=-1,
                     ),
@@ -194,39 +217,49 @@ def build_models(random_state: int = 42) -> Dict[str, Any]:
     return models
 
 
+def get_positive_score(model, X_test) -> np.ndarray:
+    if hasattr(model, "predict_proba"):
+        return model.predict_proba(X_test)[:, 1]
+
+    decision = model.decision_function(X_test)
+    return 1 / (1 + np.exp(-decision))
+
+
 def evaluate_baselines(test_df: pd.DataFrame) -> Dict[str, Dict[str, Any]]:
-    y_true = test_df[TARGET_COL].values
+    y_true = test_df[TARGET_COL].astype(int).values
 
     baselines = {}
 
     if "cpcb_window_aqi" in test_df.columns:
-        pred = test_df["cpcb_window_aqi"].values
-        baselines["persistence_current_cpcb_window_aqi"] = {
-            **regression_metrics(y_true, pred),
+        pred = (test_df["cpcb_window_aqi"].values >= 76).astype(int)
+        score = test_df["cpcb_window_aqi"].values / 500.0
+
+        baselines["persistence_current_event"] = {
+            **classifier_metrics(y_true, pred, score),
             "type": "baseline",
         }
 
     if "cpcb_window_aqi_lag_24h" in test_df.columns:
-        pred = test_df["cpcb_window_aqi_lag_24h"].values
-        mask = ~pd.isna(pred)
+        pred = (test_df["cpcb_window_aqi"].values >= 76).astype(int)
+        score = test_df["cpcb_window_aqi_lag_24h"].fillna(0).values / 500.0
 
-        if mask.sum() > 0:
-            baselines["seasonal_24h_lag"] = {
-                **regression_metrics(y_true[mask], pred[mask]),
-                "type": "baseline",
-            }
+        baselines["seasonal_24h_lag_event"] = {
+            **classifier_metrics(y_true, pred, score),
+            "type": "baseline",
+        }
 
     if "cpcb_window_aqi_rolling_mean_24h" in test_df.columns:
-        pred = test_df["cpcb_window_aqi_rolling_mean_24h"].values
-        mask = ~pd.isna(pred)
+        pred = (test_df["cpcb_window_aqi"].values >= 76).astype(int)
+        score = test_df["cpcb_window_aqi_rolling_mean_24h"].fillna(0).values / 500.0
 
-        if mask.sum() > 0:
-            baselines["rolling_mean_24h"] = {
-                **regression_metrics(y_true[mask], pred[mask]),
-                "type": "baseline",
-            }
+        baselines["rolling_mean_24h_event"] = {
+            **classifier_metrics(y_true, pred, score),
+            "type": "baseline",
+        }
 
     return baselines
+
+
 def main() -> None:
     if not INPUT_PATH.exists():
         raise FileNotFoundError(
@@ -242,29 +275,30 @@ def main() -> None:
     if TARGET_COL not in df.columns:
         raise ValueError(f"Missing target column: {TARGET_COL}")
 
-    df = df.dropna(subset=[TARGET_COL, "cpcb_aqi"]).copy()
+    df = df.dropna(subset=[TARGET_COL]).copy()
+    df[TARGET_COL] = df[TARGET_COL].astype(int)
     df = df.sort_values("timestamp").reset_index(drop=True)
 
     feature_cols = select_numeric_features(df)
 
     print("Model shape:", df.shape)
+    print("Target:", TARGET_COL)
+    print("Event rate:", float(df[TARGET_COL].mean()))
     print(f"Selected features ({len(feature_cols)}):")
     print(feature_cols)
 
     train_df, test_df = temporal_train_test_split(df)
 
     X_train = train_df[feature_cols]
-    y_train = train_df[TARGET_COL].values
+    y_train = train_df[TARGET_COL].astype(int).values
 
     X_test = test_df[feature_cols]
-    y_test = test_df[TARGET_COL].values
+    y_test = test_df[TARGET_COL].astype(int).values
+
+    print("\nTrain event rate:", float(np.mean(y_train)))
+    print("Test event rate:", float(np.mean(y_test)))
 
     results = evaluate_baselines(test_df)
-
-    persistence_rmse = results.get(
-        "persistence_current_cpcb_aqi",
-        {},
-    ).get("rmse")
 
     models = build_models()
     fitted_models = {}
@@ -273,28 +307,14 @@ def main() -> None:
         print(f"\nTraining {name}...")
         model.fit(X_train, y_train)
 
-        pred = model.predict(X_test)
-        pred = np.clip(pred, 0, 500)
+        y_score = get_positive_score(model, X_test)
+        y_pred = (y_score >= 0.5).astype(int)
 
-        metrics = regression_metrics(y_test, pred)
+        metrics = classifier_metrics(y_test, y_pred, y_score)
         metrics["type"] = "learned_model"
-
-        if persistence_rmse:
-            metrics["rmse_improvement_vs_persistence"] = float(
-                (persistence_rmse - metrics["rmse"]) / persistence_rmse
-            )
 
         results[name] = metrics
         fitted_models[name] = model
-
-    if persistence_rmse:
-        for name, metrics in results.items():
-            if "rmse_improvement_vs_persistence" not in metrics:
-                metrics["rmse_improvement_vs_persistence"] = float(
-                    (persistence_rmse - metrics["rmse"]) / persistence_rmse
-                )
-
-    best_overall = min(results, key=lambda name: results[name]["rmse"])
 
     learned_names = [
         name
@@ -309,27 +329,33 @@ def main() -> None:
     ]
 
     best_learned_model = (
-        min(learned_names, key=lambda name: results[name]["rmse"])
+        max(learned_names, key=lambda name: results[name]["f1"])
         if learned_names
         else None
     )
 
     best_baseline = (
-        min(baseline_names, key=lambda name: results[name]["rmse"])
+        max(baseline_names, key=lambda name: results[name]["f1"])
         if baseline_names
         else None
     )
+
+    best_overall = max(results, key=lambda name: results[name]["f1"])
 
     output = {
         "city": "Chennai",
         "station_location_id": int(df["location_id"].iloc[0])
         if "location_id" in df.columns
         else None,
-        "model_type": "real_cpcb_window_forecast_benchmark",
+        "model_type": "cpcb_window_event_classifier",
         "target": TARGET_COL,
+        "event_definition": "cpcb_window_aqi_target_24h >= 76 OR 24h AQI increase >= 15",
         "train_rows": int(len(train_df)),
         "test_rows": int(len(test_df)),
         "feature_count": int(len(feature_cols)),
+        "event_rate_overall": float(df[TARGET_COL].mean()),
+        "event_rate_train": float(np.mean(y_train)),
+        "event_rate_test": float(np.mean(y_test)),
         "date_range": {
             "train_start": str(train_df["timestamp"].min()),
             "train_end": str(train_df["timestamp"].max()),
@@ -340,10 +366,11 @@ def main() -> None:
         "best_learned_model": best_learned_model,
         "best_baseline": best_baseline,
         "best_overall": best_overall,
+        "selection_metric": "f1",
         "important_warning": (
-            "CPCB window AQI target uses pollutant-specific rolling averaging windows "
-            "from available station data: 24h for PM2.5/PM10/NO2/SO2 and 8h for CO/O3. "
-            "This is closer to CPCB logic, but still depends on available OpenAQ sensor coverage."
+            "This is an event-risk classifier for CPCB-window AQI crossing "
+            "Moderately Polluted threshold in 24 hours. It is trained on one station, "
+            "so results validate the prototype pipeline rather than citywide deployment."
         ),
         "generated_at": datetime.utcnow().isoformat() + "Z",
     }
@@ -363,24 +390,24 @@ def main() -> None:
             "timestamp",
             "location_id",
             "cpcb_window_aqi",
+            "cpcb_window_aqi_target_24h",
             TARGET_COL,
         ]
     ].copy()
 
     if best_learned_model is not None:
         best_model = fitted_models[best_learned_model]
-        best_pred = best_model.predict(X_test)
-        prediction_output[f"{best_learned_model}_prediction"] = np.clip(
-            best_pred,
-            0,
-            500,
-        )
+        best_score = get_positive_score(best_model, X_test)
+        best_pred = (best_score >= 0.5).astype(int)
+
+        prediction_output[f"{best_learned_model}_risk_score"] = best_score
+        prediction_output[f"{best_learned_model}_prediction"] = best_pred
 
         joblib.dump(best_model, MODEL_PATH)
 
     prediction_output.to_csv(PREDICTIONS_PATH, index=False)
 
-    print("\nReal CPCB forecast benchmark")
+    print("\nCPCB event classifier benchmark")
     print(json.dumps(output, indent=2))
 
     print(f"\nSaved metrics to: {METRICS_PATH}")
