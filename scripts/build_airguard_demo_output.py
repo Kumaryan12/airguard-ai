@@ -99,6 +99,9 @@ def main() -> None:
     citizen = load_json("citizen_advisory_agent_output.json")
     cpcb_aqi = load_json("cpcb_aqi_output.json")
     wind_sector = load_json("wind_sector_evidence.json")
+    cpcb_window_forecast_benchmark = load_json(
+    "real_cpcb_window_forecast_benchmark_metrics.json"
+)
 
     station = first_station(snapshot)
     decision = supervisor.get("decision", {})
@@ -123,6 +126,9 @@ def main() -> None:
             "current_estimated_aqi_category": station.get("aqi_estimate", {}).get(
                 "estimated_aqi_category"
             ),
+            "cpcb_window_forecast_best_overall": cpcb_window_forecast_benchmark.get("best_overall"),
+            "cpcb_window_forecast_best_learned_model": cpcb_window_forecast_benchmark.get("best_learned_model"),
+            "cpcb_window_forecast_target": cpcb_window_forecast_benchmark.get("target"),
             "cpcb_aqi": cpcb_result.get("aqi"),
             "cpcb_aqi_category": cpcb_result.get("category"),
             "dominant_pollutant": cpcb_result.get("dominant_pollutant"),
@@ -154,6 +160,13 @@ def main() -> None:
             },
             "geospatial_context": station.get("geospatial_features"),
             "source_hypotheses": station.get("geospatial_hypotheses"),
+            "cpcb_window_forecast_validation": {
+    "best_overall": cpcb_window_forecast_benchmark.get("best_overall"),
+    "best_learned_model": cpcb_window_forecast_benchmark.get("best_learned_model"),
+    "best_baseline": cpcb_window_forecast_benchmark.get("best_baseline"),
+    "important_warning": cpcb_window_forecast_benchmark.get("important_warning"),
+    "results": cpcb_window_forecast_benchmark.get("results"),
+},
             "remote_sensing": {
                 "satellite_layer": remote_sensing.get("satellite_layer"),
                 "dataset_id": remote_sensing.get("dataset_id"),

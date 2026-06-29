@@ -1,0 +1,71 @@
+{
+  "city": "Chennai",
+  "station_location_id": 2586,
+  "model_type": "real_cpcb_window_forecast_benchmark",
+  "target": "cpcb_window_aqi_target_24h",
+  "train_rows": 1396,
+  "test_rows": 466,
+  "feature_count": 244,
+  "date_range": {
+    "train_start": "2026-04-01 03:30:00+00:00",
+    "train_end": "2026-06-05 02:30:00+00:00",
+    "test_start": "2026-06-05 03:30:00+00:00",
+    "test_end": "2026-06-28 09:30:00+00:00"
+  },
+  "results": {
+    "persistence_current_cpcb_window_aqi": {
+      "mae": 15.41793991416309,
+      "rmse": 21.36851017358549,
+      "r2": -0.1729409678354037,
+      "aqi_category_accuracy": 0.7339055793991416,
+      "type": "baseline"
+    },
+    "seasonal_24h_lag": {
+      "mae": 15.89019313304721,
+      "rmse": 20.567306711497423,
+      "r2": -0.08663206576941973,
+      "aqi_category_accuracy": 0.7017167381974249,
+      "type": "baseline"
+    },
+    "rolling_mean_24h": {
+      "mae": 15.290073319027181,
+      "rmse": 19.928829235123956,
+      "r2": -0.020213906622454703,
+      "aqi_category_accuracy": 0.740343347639485,
+      "type": "baseline"
+    },
+    "ridge": {
+      "mae": 14.940986775069648,
+      "rmse": 19.398246732498638,
+      "r2": 0.03338701393621102,
+      "aqi_category_accuracy": 0.6094420600858369,
+      "type": "learned_model"
+    },
+    "extra_trees": {
+      "mae": 15.607190378537787,
+      "rmse": 20.40237862278838,
+      "r2": -0.0692746557718793,
+      "aqi_category_accuracy": 0.6158798283261803,
+      "type": "learned_model"
+    },
+    "random_forest": {
+      "mae": 14.191577101498284,
+      "rmse": 18.719686227457508,
+      "r2": 0.09982945620958317,
+      "aqi_category_accuracy": 0.7017167381974249,
+      "type": "learned_model"
+    },
+    "lightgbm_conservative": {
+      "mae": 15.055658978389244,
+      "rmse": 19.656199653647903,
+      "r2": 0.007508543487554364,
+      "aqi_category_accuracy": 0.6652360515021459,
+      "type": "learned_model"
+    }
+  },
+  "best_learned_model": "random_forest",
+  "best_baseline": "rolling_mean_24h",
+  "best_overall": "random_forest",
+  "important_warning": "CPCB window AQI target uses pollutant-specific rolling averaging windows from available station data: 24h for PM2.5/PM10/NO2/SO2 and 8h for CO/O3. This is closer to CPCB logic, but still depends on available OpenAQ sensor coverage.",
+  "generated_at": "2026-06-29T18:07:24.013380Z"
+}
