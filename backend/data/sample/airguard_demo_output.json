@@ -1,7 +1,7 @@
 {
   "project": "AirGuard AI",
   "output_type": "integrated_demo_payload",
-  "generated_at": "2026-06-29T14:28:36.926493Z",
+  "generated_at": "2026-06-29T14:32:54.195380Z",
   "city": "Chennai",
   "station_location_id": 2586,
   "executive_summary": {
@@ -221,12 +221,12 @@
       "interpretation": null,
       "does_not_prove": [
         "exact ground-level AQI",
-        "confirmed source attribution",
+        "confirmed source. attribution",
         "specific factory or road segment responsibility"
       ],
       "caveats": [
         "Sentinel-5P NO2 is a column measurement, not direct ground-level AQI.",
-        "Satellite evidence supports regional combustion-pattern context, not causal source proof.",
+        "Satellite evidence supports regional combustion-pattern context, not causal source. proof.",
         "Clouds, retrieval quality, and satellite overpass timing can affect coverage."
       ]
     }
@@ -236,7 +236,7 @@
       "intervention_required_now": false,
       "monitoring_priority": "medium",
       "decision_headline": "Current AQI is Satisfactory; Medium-Priority Preventive Actions Recommended",
-      "reasoning_summary": "The current estimated AQI is 76.275, categorized as Satisfactory. The selected forecast method is the 24-hour rolling mean baseline, which improves over persistence by 24.48%. Road dust/resuspension is a plausible source hypothesis due to the PM10/PM2.5 ratio of 3.92 and road density of 26.05 km/km². Sentinel-5P NO2 signal indicates a moderate relative combustion-related signal, supporting the traffic corridor exposure hypothesis.",
+      "reasoning_summary": "The current estimated AQI is 76.275, categorized as Satisfactory. The selected forecast method is the 24-hour rolling mean baseline, which improves over persistence by 24.48%. Road dust/resuspension is a plausible source. hypothesis due to the PM10/PM2.5 ratio of 3.92 and road density of 26.05 km/km². Sentinel-5P NO2 signal indicates a moderate relative combustion-related signal, supporting the traffic corridor exposure hypothesis.",
       "selected_forecast_method": "rolling_mean_24h",
       "key_evidence_used": [
         "Current estimated AQI: 76.275 (Satisfactory)",
@@ -270,7 +270,7 @@
         "The 24-hour rolling mean baseline is the selected forecast method, improving over persistence by 24.48%."
       ],
       "claims_to_avoid": [
-        "Industrial influence is confirmed as a pollution source.",
+        "Industrial influence is confirmed as a pollution source..",
         "The learned ML model is currently the best operational forecast method."
       ],
       "human_review_required": true,
@@ -298,7 +298,7 @@
         "Reduce exposure near high-traffic roads"
       ],
       "what_not_to_claim": [
-        "Industrial influence as confirmed pollution source",
+        "Industrial influence as confirmed pollution source.",
         "Learned ML model as best operational forecast method"
       ],
       "data_limitations": [
@@ -338,7 +338,7 @@
     "The 24-hour rolling mean baseline is the selected forecast method, improving over persistence by 24.48%."
   ],
   "claims_to_avoid": [
-    "Industrial influence is confirmed as a pollution source.",
+    "Industrial influence is confirmed as a pollution source..",
     "The learned ML model is currently the best operational forecast method."
   ],
   "limitations": [

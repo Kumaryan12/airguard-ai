@@ -5,9 +5,53 @@ from typing import Any, Dict
 
 from ml.config import PROJECT_ROOT
 
+def clean_text(value):
+    if isinstance(value, str):
+        replacements = {
+            "Thecurrent": "The current",
+            "thecurrent": "the current",
+            "currentAQI": "current AQI",
+            "AQItarget": "AQI target",
+            "CPCBAQI": "CPCB AQI",
+            "CPCBbreakpoint": "CPCB breakpoint",
+            "Medium-PriorityPreventive": "Medium-Priority Preventive",
+            "ActionsRecommended": "Actions Recommended",
+            "rollingmean": "rolling mean",
+            "meanbaseline": "mean baseline",
+            "selectedforecast": "selected forecast",
+            "operationalforecast": "operational forecast",
+            "neardusty": "near dusty",
+            "nearhigh-traffic": "near high-traffic",
+            "signaland": "signal and",
+            "roaddensity": "road density",
+            "asa pollution": "as a pollution",
+            "asSatisfactory": "as Satisfactory",
+            "columnmeasurement": "column measurement",
+            "canaffect": "can affect",
+            "source": "source.",
+            "fromavailable": "from available",
+            "not official CPCBbreakpoint": "not official CPCB breakpoint",
+            "not direct ground-level AQI": "not direct ground-level AQI",
+        }
+
+        for bad, good in replacements.items():
+            value = value.replace(bad, good)
+
+        return " ".join(value.split())
+
+    if isinstance(value, list):
+        return [clean_text(item) for item in value]
+
+    if isinstance(value, dict):
+        return {key: clean_text(item) for key, item in value.items()}
+
+    return value
+
 
 DATA_DIR = PROJECT_ROOT / "backend" / "data" / "sample"
 OUTPUT_PATH = DATA_DIR / "airguard_demo_output.json"
+
+
 
 
 def load_json(name: str) -> Dict[str, Any]:
@@ -96,6 +140,7 @@ def main() -> None:
         "claims_to_avoid": decision.get("claims_to_avoid", []),
         "limitations": decision.get("limitations", []),
     }
+    payload = clean_text(payload)
 
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
 
