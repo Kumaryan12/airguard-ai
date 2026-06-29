@@ -3,7 +3,7 @@ import pandas as pd
 
 from ml.config import RAW_DATA_DIR, PROCESSED_DATA_DIR
 
-
+OPENMETEO_PATH = RAW_DATA_DIR / "chennai_openmeteo_weather_2026_june.csv"
 INPUT_PATH = RAW_DATA_DIR / "chennai_openaq_historical_hourly.csv"
 OSM_PATH = PROCESSED_DATA_DIR / "chennai_osm_station_features.csv"
 OUTPUT_PATH = PROCESSED_DATA_DIR / "chennai_real_historical_features.csv"
@@ -151,6 +151,63 @@ def attach_osm_features(df: pd.DataFrame) -> pd.DataFrame:
 
     return df.merge(osm, on="location_id", how="left")
 
+def merge_openmeteo_weather(df: pd.DataFrame) -> pd.DataFrame:
+    if not OPENMETEO_PATH.exists():
+        print("Open-Meteo weather file not found. Skipping weather merge.")
+        return df
+
+    weather = pd.read_csv(OPENMETEO_PATH)
+
+    if weather.empty:
+        print("Open-Meteo weather file is empty. Skipping weather merge.")
+        return df
+
+    weather["timestamp"] = pd.to_datetime(weather["timestamp"], utc=True, errors="coerce")
+    weather["timestamp_hour"] = weather["timestamp"].dt.floor("h")
+
+    df = df.copy()
+    df["timestamp_hour"] = df["timestamp"].dt.floor("h")
+
+    weather_keep = [
+        "timestamp_hour",
+        "temperature",
+        "humidity",
+        "precipitation",
+        "wind_speed",
+        "wind_direction",
+        "surface_pressure",
+    ]
+
+    weather = weather[[col for col in weather_keep if col in weather.columns]].copy()
+
+    merged = df.merge(
+        weather,
+        on="timestamp_hour",
+        how="left",
+        suffixes=("", "_openmeteo"),
+    )
+
+    for col in ["temperature", "humidity", "wind_speed", "wind_direction"]:
+        fallback_col = f"{col}_openmeteo"
+        if fallback_col in merged.columns:
+            if col not in merged.columns:
+                merged[col] = merged[fallback_col]
+            else:
+                merged[col] = merged[col].fillna(merged[fallback_col])
+
+    for col in ["precipitation", "surface_pressure"]:
+        if col not in merged.columns and col in weather.columns:
+            merged[col] = merged[col]
+
+    drop_cols = [
+        col for col in merged.columns
+        if col.endswith("_openmeteo") or col == "timestamp_hour"
+    ]
+
+    merged = merged.drop(columns=drop_cols)
+
+    return merged
+
 
 def main() -> None:
     if not INPUT_PATH.exists():
@@ -178,7 +235,7 @@ def main() -> None:
     )
 
     pivot = pivot.sort_values(["location_id", "timestamp"]).reset_index(drop=True)
-
+    pivot = merge_openmeteo_weather(pivot)
     pivot = add_time_features(pivot)
     pivot = add_dispersion_features(pivot)
 
