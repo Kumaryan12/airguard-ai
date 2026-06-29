@@ -296,22 +296,22 @@
   "decision": {
     "intervention_required_now": false,
     "monitoring_priority": "medium",
-    "decision_headline": "Continue monitoring with medium priority, consider targeted interventions",
-    "reasoning_summary": "The current estimated AQI is satisfactory, but dispersion risk is medium and road dust/resuspension is a plausible source hypothesis. Satellite NO2 provides regional combustion context, but does not prove exact ground-level AQI or confirmed source attribution.",
+    "decision_headline": "Current AQI is Satisfactory; Medium-Priority Preventive Actions Recommended",
+    "reasoning_summary": "The current estimated AQI is 76.275, categorized as Satisfactory. The selected forecast method is the 24-hour rolling mean baseline, which improves over persistence by 24.48%. Road dust/resuspension is a plausible source hypothesis due to the PM10/PM2.5 ratio of 3.92 and road density of 26.05 km/km\u00b2. Sentinel-5P NO2 signal indicates a moderate relative combustion-related signal, supporting the traffic corridor exposure hypothesis.",
     "selected_forecast_method": "rolling_mean_24h",
     "key_evidence_used": [
-      "latest station context",
-      "forecast validation results",
-      "geospatial evidence",
-      "satellite NO2 context"
+      "Current estimated AQI: 76.275 (Satisfactory)",
+      "Forecast method: rolling_mean_24h; RMSE improvement vs persistence: 24.48%",
+      "PM10/PM2.5 ratio: 3.92; road density: 26.05 km/km\u00b2",
+      "Sentinel-5P NO2 signal: moderate_relative_no2 from 269 images"
     ],
     "recommended_actions": [
       {
         "action": "Targeted mechanical road sweeping and water misting",
         "priority": "medium",
         "why": [
-          "PM10-heavy signal and road density",
-          "Action is low-regret and operationally deployable"
+          "PM10-heavy signal and road density 26.05 km/km\u00b2",
+          "Action is low-regret and operationally deployable."
         ],
         "human_review_required": true
       },
@@ -319,27 +319,26 @@
         "action": "Traffic flow and idling control near major road corridor",
         "priority": "medium",
         "why": [
-          "Major road density",
-          "Major road lies close to the monitoring point"
+          "Major road density 4.568 km/km\u00b2",
+          "Major road lies close to the monitoring point."
         ],
         "human_review_required": true
       }
     ],
     "safe_claims": [
-      "AirGuard has a real-data forecast validation pipeline",
-      "The current estimated AQI is satisfactory",
-      "Road dust/resuspension is a plausible source hypothesis",
-      "Satellite NO2 provides regional combustion context"
+      "The current estimated AQI is 76.275, categorized as Satisfactory.",
+      "Road dust/resuspension is a plausible hypothesis for the current AQI.",
+      "The 24-hour rolling mean baseline is the selected forecast method, improving over persistence by 24.48%."
     ],
     "claims_to_avoid": [
-      "Industrial influence is confirmed as a pollution source",
-      "The source attribution is causal proof"
+      "Industrial influence is confirmed as a pollution source.",
+      "The learned ML model is currently the best operational forecast method."
     ],
     "human_review_required": true,
     "limitations": [
-      "Current AQI target is approximate and not official CPCB breakpoint AQI",
-      "Satellite NO2 is a column measurement, not direct ground-level AQI",
-      "Clouds, retrieval quality, and satellite overpass timing can affect coverage"
+      "The current AQI target is approximate and must later be replaced with official CPCB breakpoint AQI.",
+      "Sentinel-5P NO2 is a column measurement, not direct ground-level AQI.",
+      "Clouds, retrieval quality, and satellite overpass timing can affect satellite coverage."
     ]
   }
 }

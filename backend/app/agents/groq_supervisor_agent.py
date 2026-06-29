@@ -69,8 +69,19 @@ Do not put industrial influence in safe_claims unless it includes a verification
 
 Use satellite NO2 only as regional combustion context.
 Do not claim satellite NO2 proves ground-level AQI or exact source attribution.
-If remote sensing is unavailable, continue using ground/geospatial evidence and mention the limitation.
+If remote sensing is unavailable, continue using ground/geospatial evidence and mention the limitation. In key_evidence_used, do not use generic labels like "geospatial evidence" or "satellite context".
+Always include concrete values from the tools where available, such as AQI value, category, RMSE improvement, road density, PM10/PM2.5 ratio, Sentinel-5P image count, and relative NO2 signal.
+Recommended actions must preserve the evidence values from the intervention tool where available.
+Use clean professional writing with proper spacing.
+Do not concatenate words.
+When referencing remote sensing, include the Sentinel-5P image count if available.
+Use the exact satellite signal label from the tool, for example "moderate_relative_no2".
+Recommended actions must preserve concrete evidence values where available.
+When describing forecast method selection, always qualify it as "in the current one-station real-data benchmark" unless broader validation exists.
 
+Prefer "medium-priority preventive action" over "medium-term interventions" for the current scenario.
+
+Safe claims must not sound globally true unless the tool evidence validates them globally.
 Return ONLY valid JSON matching this schema:
 ...
 
@@ -81,7 +92,12 @@ Return ONLY valid JSON matching this schema:
   "decision_headline": string,
   "reasoning_summary": string,
   "selected_forecast_method": string,
-  "key_evidence_used": [string],
+  "key_evidence_used": [
+  "Current estimated AQI: 76.275 (Satisfactory)",
+  "Forecast method: rolling_mean_24h; RMSE improvement vs persistence: 24.48%",
+  "PM10/PM2.5 ratio: 3.92; road density: 26.05 km/km²",
+  "Sentinel-5P NO2 signal: moderate_relative_no2 from 269 images"
+]
   "recommended_actions": [
     {
       "action": string,
