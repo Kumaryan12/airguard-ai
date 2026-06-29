@@ -1,7 +1,7 @@
 {
   "project": "AirGuard AI",
   "output_type": "integrated_demo_payload",
-  "generated_at": "2026-06-29T14:32:54.195380Z",
+  "generated_at": "2026-06-29T17:29:03.084006Z",
   "city": "Chennai",
   "station_location_id": 2586,
   "executive_summary": {
@@ -10,16 +10,18 @@
     "intervention_required_now": false,
     "current_estimated_aqi": 76.275,
     "current_estimated_aqi_category": "Satisfactory",
+    "cpcb_aqi": 56.5,
+    "cpcb_aqi_category": "Satisfactory",
+    "dominant_pollutant": "pm10",
     "data_status": "fresh_realtime_sensor_snapshot",
     "sensor_age_hours": 2.52,
     "selected_forecast_method": "rolling_mean_24h",
     "remote_sensing_signal": "moderate_relative_no2",
     "sentinel5p_image_count": 269,
+    "wind_from_sector": "east",
+    "wind_speed_class": "low",
     "citizen_advisory_level": "low",
-    "panic_level": "none",
-    "cpcb_aqi": 56.5,
-    "cpcb_aqi_category": "Satisfactory",
-    "dominant_pollutant": "pm10"
+    "panic_level": "none"
   },
   "evidence_stack": {
     "ground_sensor": {
@@ -221,14 +223,79 @@
       "interpretation": null,
       "does_not_prove": [
         "exact ground-level AQI",
-        "confirmed source. attribution",
+        "confirmed source attribution",
         "specific factory or road segment responsibility"
       ],
       "caveats": [
         "Sentinel-5P NO2 is a column measurement, not direct ground-level AQI.",
-        "Satellite evidence supports regional combustion-pattern context, not causal source. proof.",
+        "Satellite evidence supports regional combustion-pattern context, not causal source proof.",
         "Clouds, retrieval quality, and satellite overpass timing can affect coverage."
       ]
+    },
+    "wind_sector_evidence": {
+      "tool_name": "Wind Sector Evidence Tool",
+      "tool_type": "meteorology_source_screening_tool",
+      "city": "Chennai",
+      "stations": [
+        {
+          "location_id": 2586,
+          "latest_datetime_utc": "2026-06-29T08:15:00Z",
+          "wind_direction_degrees": 97.18,
+          "interpreted_wind_from_sector": "east",
+          "wind_speed_mps": 1.12,
+          "wind_speed_class": "low",
+          "source_alignment": [
+            {
+              "source": "road dust / resuspension",
+              "alignment": "meteorologically_plausible_screening",
+              "confidence_delta": "increase",
+              "reason": [
+                "Wind speed class is low.",
+                "PM10/PM2.5 ratio is 3.92.",
+                "Road density is 26.0497 km/km²."
+              ]
+            },
+            {
+              "source": "traffic corridor exposure",
+              "alignment": "meteorologically_plausible_screening",
+              "confidence_delta": "slight_increase",
+              "reason": [
+                "Wind is reported from the east sector.",
+                "Major road density is 4.568 km/km².",
+                "Exact upwind road-segment geometry is not yet computed."
+              ]
+            },
+            {
+              "source": "industrial influence screening",
+              "alignment": "screening_only",
+              "confidence_delta": "slight_increase_requires_directional_geometry",
+              "reason": [
+                "Industrial POI count is 15.",
+                "Wind is reported from the east sector.",
+                "Industrial POI count alone does not prove emissions impact."
+              ]
+            },
+            {
+              "source": "meteorological trapping / poor dispersion",
+              "alignment": "dispersion_context",
+              "confidence_delta": "increase",
+              "reason": [
+                "Wind speed is 1.12 m/s.",
+                "Wind speed class is low.",
+                "Low wind can allow local pollutant accumulation."
+              ]
+            }
+          ],
+          "does_not_prove": [
+            "causal source attribution",
+            "specific road responsibility",
+            "specific industrial unit responsibility",
+            "exact upwind source contribution without source-coordinate geometry"
+          ],
+          "recommended_next_upgrade": "Add exact road-segment and industrial-POI bearings from the station, then compare source bearings against wind direction sectors."
+        }
+      ],
+      "warning": "This tool provides screening-level wind-sector evidence. It does not prove source attribution."
     }
   },
   "agent_outputs": {
@@ -236,21 +303,24 @@
       "intervention_required_now": false,
       "monitoring_priority": "medium",
       "decision_headline": "Current AQI is Satisfactory; Medium-Priority Preventive Actions Recommended",
-      "reasoning_summary": "The current estimated AQI is 76.275, categorized as Satisfactory. The selected forecast method is the 24-hour rolling mean baseline, which improves over persistence by 24.48%. Road dust/resuspension is a plausible source. hypothesis due to the PM10/PM2.5 ratio of 3.92 and road density of 26.05 km/km². Sentinel-5P NO2 signal indicates a moderate relative combustion-related signal, supporting the traffic corridor exposure hypothesis.",
+      "reasoning_summary": "The current estimated AQI is 76.275 (Satisfactory), and the selected forecast method is the 24-hour rolling mean baseline, which improves over persistence by 24.48%. The PM10/PM2.5 ratio and road density support road dust/resuspension as a plausible hypothesis. Wind-sector analysis increases confidence in road dust/resuspension and traffic corridor exposure hypotheses due to low wind speed and eastward wind direction.",
       "selected_forecast_method": "rolling_mean_24h",
       "key_evidence_used": [
         "Current estimated AQI: 76.275 (Satisfactory)",
         "Forecast method: rolling_mean_24h; RMSE improvement vs persistence: 24.48%",
         "PM10/PM2.5 ratio: 3.92; road density: 26.05 km/km²",
-        "Sentinel-5P NO2 signal: moderate_relative_no2 from 269 images"
+        "Sentinel-5P NO2 signal: moderate_relative_no2 from 269 images",
+        "Wind direction sector: east; wind speed class: low",
+        "CPCB AQI: 56.5 (Satisfactory); dominant pollutant: pm10"
       ],
       "recommended_actions": [
         {
           "action": "Targeted mechanical road sweeping and water misting",
           "priority": "medium",
           "why": [
-            "PM10-heavy signal and road density 26.05 km/km²",
-            "Action is low-regret and operationally deployable."
+            "PM10-heavy signal and road density 26.0497 km/km²",
+            "Action is low-regret and operationally deployable.",
+            "Wind-sector analysis supports road dust/resuspension hypothesis"
           ],
           "human_review_required": true
         },
@@ -259,25 +329,58 @@
           "priority": "medium",
           "why": [
             "Major road density 4.568 km/km²",
-            "Major road lies close to the monitoring point."
+            "Major road lies close to the monitoring point.",
+            "Wind-sector analysis slightly increases confidence in traffic corridor exposure hypothesis"
+          ],
+          "human_review_required": true
+        },
+        {
+          "action": "Schedule dust and traffic interventions during poor-dispersion window",
+          "priority": "medium",
+          "why": [
+            "Dispersion risk is medium",
+            "Low wind can allow pollutants to accumulate locally.",
+            "Wind speed class is low"
+          ],
+          "human_review_required": true
+        },
+        {
+          "action": "Screen nearby industrial units for compliance risk",
+          "priority": "low-medium",
+          "why": [
+            "15 industrial-tagged OSM features within radius",
+            "POI proximity is not causal proof, so action should begin with screening.",
+            "Wind-sector analysis slightly increases confidence in industrial influence hypothesis"
+          ],
+          "human_review_required": true
+        },
+        {
+          "action": "Prepare targeted advisory for nearby sensitive receptors",
+          "priority": "low",
+          "why": [
+            "6 school/hospital POIs within radius",
+            "Current estimated AQI category is Satisfactory"
           ],
           "human_review_required": true
         }
       ],
       "safe_claims": [
-        "The current estimated AQI is 76.275, categorized as Satisfactory.",
-        "Road dust/resuspension is a plausible hypothesis for the current AQI.",
-        "The 24-hour rolling mean baseline is the selected forecast method, improving over persistence by 24.48%."
+        "The current AQI is Satisfactory.",
+        "Road dust/resuspension is a plausible hypothesis.",
+        "Traffic corridor exposure is a plausible hypothesis.",
+        "Industrial influence is a low-to-medium confidence hypothesis requiring verification.",
+        "The system has validated real-data ingestion and forecasting benchmarks."
       ],
       "claims_to_avoid": [
-        "Industrial influence is confirmed as a pollution source..",
-        "The learned ML model is currently the best operational forecast method."
+        "Industrial influence is confirmed as a pollution source.",
+        "The learned ML model is currently the best operational forecast method.",
+        "The source attribution is causal proof."
       ],
       "human_review_required": true,
       "limitations": [
         "The current AQI target is approximate and must later be replaced with official CPCB breakpoint AQI.",
-        "Sentinel-5P NO2 is a column measurement, not direct ground-level AQI.",
-        "Clouds, retrieval quality, and satellite overpass timing can affect satellite coverage."
+        "Satellite NO2 is a column measurement, not direct ground-level AQI.",
+        "Wind-sector analysis provides screening-level evidence, not causal source attribution."
       ]
     },
     "citizen_advisory": {
@@ -298,8 +401,8 @@
         "Reduce exposure near high-traffic roads"
       ],
       "what_not_to_claim": [
-        "Industrial influence as confirmed pollution source.",
-        "Learned ML model as best operational forecast method"
+        "Do not claim industrial influence is a confirmed pollution source.",
+        "Do not claim the learned ML model is the best operational forecast method."
       ],
       "data_limitations": [
         "Approximate AQI target",
@@ -317,8 +420,9 @@
       "action": "Targeted mechanical road sweeping and water misting",
       "priority": "medium",
       "why": [
-        "PM10-heavy signal and road density 26.05 km/km²",
-        "Action is low-regret and operationally deployable."
+        "PM10-heavy signal and road density 26.0497 km/km²",
+        "Action is low-regret and operationally deployable.",
+        "Wind-sector analysis supports road dust/resuspension hypothesis"
       ],
       "human_review_required": true
     },
@@ -327,23 +431,56 @@
       "priority": "medium",
       "why": [
         "Major road density 4.568 km/km²",
-        "Major road lies close to the monitoring point."
+        "Major road lies close to the monitoring point.",
+        "Wind-sector analysis slightly increases confidence in traffic corridor exposure hypothesis"
+      ],
+      "human_review_required": true
+    },
+    {
+      "action": "Schedule dust and traffic interventions during poor-dispersion window",
+      "priority": "medium",
+      "why": [
+        "Dispersion risk is medium",
+        "Low wind can allow pollutants to accumulate locally.",
+        "Wind speed class is low"
+      ],
+      "human_review_required": true
+    },
+    {
+      "action": "Screen nearby industrial units for compliance risk",
+      "priority": "low-medium",
+      "why": [
+        "15 industrial-tagged OSM features within radius",
+        "POI proximity is not causal proof, so action should begin with screening.",
+        "Wind-sector analysis slightly increases confidence in industrial influence hypothesis"
+      ],
+      "human_review_required": true
+    },
+    {
+      "action": "Prepare targeted advisory for nearby sensitive receptors",
+      "priority": "low",
+      "why": [
+        "6 school/hospital POIs within radius",
+        "Current estimated AQI category is Satisfactory"
       ],
       "human_review_required": true
     }
   ],
   "safe_claims": [
-    "The current estimated AQI is 76.275, categorized as Satisfactory.",
-    "Road dust/resuspension is a plausible hypothesis for the current AQI.",
-    "The 24-hour rolling mean baseline is the selected forecast method, improving over persistence by 24.48%."
+    "The current AQI is Satisfactory.",
+    "Road dust/resuspension is a plausible hypothesis.",
+    "Traffic corridor exposure is a plausible hypothesis.",
+    "Industrial influence is a low-to-medium confidence hypothesis requiring verification.",
+    "The system has validated real-data ingestion and forecasting benchmarks."
   ],
   "claims_to_avoid": [
-    "Industrial influence is confirmed as a pollution source..",
-    "The learned ML model is currently the best operational forecast method."
+    "Industrial influence is confirmed as a pollution source.",
+    "The learned ML model is currently the best operational forecast method.",
+    "The source attribution is causal proof."
   ],
   "limitations": [
     "The current AQI target is approximate and must later be replaced with official CPCB breakpoint AQI.",
-    "Sentinel-5P NO2 is a column measurement, not direct ground-level AQI.",
-    "Clouds, retrieval quality, and satellite overpass timing can affect satellite coverage."
+    "Satellite NO2 is a column measurement, not direct ground-level AQI.",
+    "Wind-sector analysis provides screening-level evidence, not causal source attribution."
   ]
 }

@@ -1,0 +1,65 @@
+{
+  "tool_name": "Wind Sector Evidence Tool",
+  "tool_type": "meteorology_source_screening_tool",
+  "city": "Chennai",
+  "stations": [
+    {
+      "location_id": 2586,
+      "latest_datetime_utc": "2026-06-29T08:15:00Z",
+      "wind_direction_degrees": 97.18,
+      "interpreted_wind_from_sector": "east",
+      "wind_speed_mps": 1.12,
+      "wind_speed_class": "low",
+      "source_alignment": [
+        {
+          "source": "road dust / resuspension",
+          "alignment": "meteorologically_plausible_screening",
+          "confidence_delta": "increase",
+          "reason": [
+            "Wind speed class is low.",
+            "PM10/PM2.5 ratio is 3.92.",
+            "Road density is 26.0497 km/km²."
+          ]
+        },
+        {
+          "source": "traffic corridor exposure",
+          "alignment": "meteorologically_plausible_screening",
+          "confidence_delta": "slight_increase",
+          "reason": [
+            "Wind is reported from the east sector.",
+            "Major road density is 4.568 km/km².",
+            "Exact upwind road-segment geometry is not yet computed."
+          ]
+        },
+        {
+          "source": "industrial influence screening",
+          "alignment": "screening_only",
+          "confidence_delta": "slight_increase_requires_directional_geometry",
+          "reason": [
+            "Industrial POI count is 15.",
+            "Wind is reported from the east sector.",
+            "Industrial POI count alone does not prove emissions impact."
+          ]
+        },
+        {
+          "source": "meteorological trapping / poor dispersion",
+          "alignment": "dispersion_context",
+          "confidence_delta": "increase",
+          "reason": [
+            "Wind speed is 1.12 m/s.",
+            "Wind speed class is low.",
+            "Low wind can allow local pollutant accumulation."
+          ]
+        }
+      ],
+      "does_not_prove": [
+        "causal source attribution",
+        "specific road responsibility",
+        "specific industrial unit responsibility",
+        "exact upwind source contribution without source-coordinate geometry"
+      ],
+      "recommended_next_upgrade": "Add exact road-segment and industrial-POI bearings from the station, then compare source bearings against wind direction sectors."
+    }
+  ],
+  "warning": "This tool provides screening-level wind-sector evidence. It does not prove source attribution."
+}
