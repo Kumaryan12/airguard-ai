@@ -26,6 +26,14 @@ def main() -> None:
     print("Best learned model:", metrics["best_learned_model"])
     print("Best baseline:", metrics["best_baseline"])
 
+    best_overall = metrics["results"][metrics["best_overall"]]
+    best_learned = metrics["results"][metrics["best_learned_model"]]
+
+    print("\nBest overall RMSE:", round(best_overall["rmse"], 4))
+    print("Best overall improvement vs persistence:", round(best_overall["rmse_improvement_vs_persistence"] * 100, 2), "%")
+    print("Best learned RMSE:", round(best_learned["rmse"], 4))
+    print("Best learned improvement vs persistence:", round(best_learned["rmse_improvement_vs_persistence"] * 100, 2), "%")
+
 
 if __name__ == "__main__":
     main()
