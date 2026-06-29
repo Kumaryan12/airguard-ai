@@ -1,0 +1,40 @@
+{
+  "agent_name": "Groq Citizen Advisory Agent",
+  "agent_type": "llm_public_health_advisory_agent",
+  "llm_provider": "Groq",
+  "model": "llama-3.3-70b-versatile",
+  "input_summary": {
+    "source": "Groq Supervisor Agent output + real station snapshot",
+    "mode": "LLM-generated advisory with deterministic safety repair layer"
+  },
+  "advisory": {
+    "advisory_level": "low",
+    "panic_level": "none",
+    "english_advisory": "Air quality is satisfactory, but sensitive groups should be aware and reduce exposure near dusty or high-traffic roads if they feel discomfort.",
+    "tamil_advisory": "துத்தி கலு கலுதிறே கழு கழிழு அத் கலு கழிழு அலு கலே கழிழு எதிறே கலு கழிழு அலு கலே.",
+    "who_should_take_care": [
+      "People with asthma",
+      "People with heart disease",
+      "Children",
+      "Elderly people",
+      "Outdoor workers"
+    ],
+    "recommended_precautions": [
+      "Stay aware of air quality",
+      "Reduce exposure near dusty roads",
+      "Reduce exposure near high-traffic roads"
+    ],
+    "what_not_to_claim": [
+      "AQI is officially confirmed by CPCB",
+      "Industrial influence is a confirmed pollution source"
+    ],
+    "data_limitations": [
+      "Approximate AQI estimate",
+      "Satellite measurements may be affected by clouds or retrieval quality"
+    ],
+    "safety_repair": {
+      "repairs_applied": [],
+      "used_llm_output_directly": true
+    }
+  }
+}
