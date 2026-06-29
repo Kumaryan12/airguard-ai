@@ -1,0 +1,22 @@
+{
+  "city": "Chennai",
+  "generated_at": "2026-06-29T09:00:00",
+  "horizon_hours": 24,
+  "wards": [
+    {
+      "ward_id": "W18",
+      "ward_name": "Example Ward",
+      "lat": 13.04,
+      "lon": 80.23,
+      "current_pm25": 62.5,
+      "forecast_pm25": 92.4,
+      "forecast_pm25_p10": 74.1,
+      "forecast_pm25_p90": 118.6,
+      "current_aqi": 156,
+      "forecast_aqi": 214,
+      "risk_level": "Very Poor",
+      "threshold_crossing_probability": 0.83,
+      "model_confidence": 0.81
+    }
+  ]
+}

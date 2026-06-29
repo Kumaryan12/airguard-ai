@@ -1,0 +1,31 @@
+{
+  "city": "Chennai",
+  "generated_at": "2026-06-29T09:00:00",
+  "wards": [
+    {
+      "ward_id": "W18",
+      "dominant_sources": [
+        {
+          "source": "traffic + road dust",
+          "probability": 0.76,
+          "evidence": [
+            "high road density",
+            "elevated NO2 pattern",
+            "low wind speed",
+            "morning spike pattern"
+          ]
+        },
+        {
+          "source": "construction dust",
+          "probability": 0.54,
+          "evidence": [
+            "construction proximity",
+            "PM10-heavy signal"
+          ]
+        }
+      ],
+      "attribution_confidence": "medium-high",
+      "causal_warning": "Probabilistic attribution, not direct causal proof."
+    }
+  ]
+}
