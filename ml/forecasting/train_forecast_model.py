@@ -27,7 +27,6 @@ RISK_LEVELS = [
     (401, 10_000, "Severe"),
 ]
 
-
 FEATURE_COLUMNS = [
     "ward_id",
     "hour",
@@ -43,13 +42,16 @@ FEATURE_COLUMNS = [
     "construction_score",
     "industrial_score",
     "green_cover",
+    "population_vulnerability",
     "traffic_proxy",
+    "city_stagnation_event",
+    "waste_burning_event",
+    "local_event",
     "pm25",
     "pm10",
     "no2",
     "aqi",
 ]
-
 
 TARGET_COLUMNS = {
     "pm25": "pm25_target_24h",
